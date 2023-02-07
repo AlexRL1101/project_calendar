@@ -1,0 +1,18 @@
+#repetir_accion {
+    display: none;
+}
+
+input#other-text {
+    position: absolute;
+    width: 100px;
+    left: 8px;
+    height: 15px;
+    z-index: -1;
+    border-right-color: transparent;
+}
+
+select {
+    width: 130px;
+    height: 21px;
+    z-index: 0;
+}

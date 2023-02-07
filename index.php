@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendario Web</title>
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="./css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./fullcalendar/lib/main.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+
     <script src="./js/jquery-3.6.0.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
     <script src="./fullcalendar/lib/main.min.js"></script>
@@ -30,7 +32,14 @@
         .btn-info.text-light:focus {
             background: #000;
         }
-        table, tbody, td, tfoot, th, thead, tr {
+
+        table,
+        tbody,
+        td,
+        tfoot,
+        th,
+        thead,
+        tr {
             border-color: #ededed !important;
             border-style: solid;
             border-width: 1px !important;
@@ -41,12 +50,12 @@
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient" id="topNavBar">
         <div class="container">
-            <a class="navbar-brand" href="https://sourcecodester.com">
-            Sourcecodester
+            <a class="navbar-brand" href="#">
+                Calendario
             </a>
 
             <div>
-                <b class="text-light">Sample Scheduling</b>
+                <b class="text-light">Calendario de Eventos</b>
             </div>
         </div>
     </nav>
@@ -62,7 +71,7 @@
                     </div>
                     <div class="card-body">
                         <div class="container-fluid">
-                            <form  method="POST" id="schedule-form" name="schedule-form">
+                            <form method="POST" id="schedule-form" name="schedule-form">
                                 <input type="hidden" name="id" value="">
                                 <div class="form-group mb-2">
                                     <label for="title" class="control-label">Titulo</label>
@@ -84,6 +93,18 @@
                                     <label for="end_datetime" class="control-label">Fin</label>
                                     <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" required>
                                 </div>
+                                <div id="repetir_accion" class="form-group mb-2">
+                                    <label for="end_datetime" class="control-label">Dias a repetir</label>
+                                    <select>
+                                        <option>1</option>
+                                        <option>3</option>
+                                        <option>5</option>
+                                        <option>15</option>
+                                        <option>30</option>
+                                        <option>Otro...</option>
+                                    </select>
+                                    <input class="form-control form-control-sm rounded-0" type="text" placeholder="Otro..." id="other-text" name="other-text" />
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -97,6 +118,7 @@
             </div>
         </div>
     </div>
+
     <!-- Event Details Modal -->
     <div class="modal fade" tabindex="-1" data-bs-backdrop="static" id="event-details-modal">
         <div class="modal-dialog modal-dialog-centered">
@@ -113,7 +135,7 @@
                             <dt class="text-muted">Descripcion</dt>
                             <dd id="description" class=""></dd>
                             <dt class="text-muted">Color</dt>
-                            <dd id="color" class=""></dd>
+                            <input type="color" id="color" class="" />
                             <dt class="text-muted">Inicio</dt>
                             <dd id="start" class=""></dd>
                             <dt class="text-muted">Fin</dt>
@@ -123,16 +145,15 @@
                 </div>
                 <div class="modal-footer rounded-0">
                     <div class="text-end">
-                        <button type="button" class="btn btn-primary btn-sm rounded-0" id="edit" data-id="">Editar</button>
+                        <button type="button" class="btn btn-warning btn-sm rounded-0" id="edit" data-id="">Editar</button>
                         <button type="button" class="btn btn-danger btn-sm rounded-0" id="delete" data-id="">Eliminar</button>
-                        <button type="button" class="btn btn-secondary btn-sm rounded-0" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-info btn-sm rounded-0" data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Event Details Modal -->
-
 
 </body>
 <script src="./js/script.js"></script>

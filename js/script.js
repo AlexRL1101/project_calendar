@@ -1,6 +1,10 @@
+let divRepetir = $('#repetir_accion');
+
 function init() {
     getEvents();
-    $("#schedule-form").on("submit", function(e) {
+    $(divRepetir).hide();
+
+    $("#schedule-form").on("submit", function (e) {
         saveEvents(e);
     })
 }
@@ -13,7 +17,7 @@ function getEvents() {
     $.ajax({
         url: "ajax/events.php?op=getEvents",
         type: "JSON",
-        success: function(scheds) {
+        success: function (scheds) {
             var scheds = $.parseJSON(scheds);
 
             if (!!scheds) {
@@ -39,13 +43,13 @@ function getEvents() {
                 themeSystem: 'bootstrap',
                 //Random default events
                 events: events,
-                eventClick: function(info) {
+                eventClick: function (info) {
                     var _details = $('#event-details-modal')
                     var id = info.event.id
                     if (!!scheds[id]) {
                         _details.find('#title').text(scheds[id].title)
                         _details.find('#description').text(scheds[id].description)
-                        _details.find('#color').text(scheds[id].color)
+                        _details.find('#color').val(scheds[id].color)
                         _details.find('#start').text(scheds[id].sdate)
                         _details.find('#end').text(scheds[id].edate)
                         _details.find('#edit,#edit').attr('data-id', id)
@@ -55,7 +59,7 @@ function getEvents() {
                         alert("Event is undefined");
                     }
                 },
-                eventDidMount: function(info) {
+                eventDidMount: function (info) {
                     // Do Something after events mounted
                 },
                 editable: true
@@ -64,17 +68,19 @@ function getEvents() {
             calendar.render();
 
             // Form reset listener
-            $('#schedule-form').on('reset', function() {
+            $('#schedule-form').on('reset', function () {
                 $(this).find('input:hidden').val('')
                 $(this).find('input:visible').first().focus()
             })
 
             // Edit Button
-            $('#edit').click(function() {
+            $('#edit').click(function () {
+                $(divRepetir).show();
                 var id = $(this).attr('data-id')
                 if (!!scheds[id]) {
                     var _form = $('#schedule-form')
                     console.log(String(scheds[id].start_datetime), String(scheds[id].start_datetime).replace(" ", "\\t"))
+
                     _form.find('[name="id"]').val(id)
                     _form.find('[name="title"]').val(scheds[id].title)
                     _form.find('[name="description"]').val(scheds[id].description)
@@ -83,28 +89,42 @@ function getEvents() {
                     _form.find('[name="end_datetime"]').val(String(scheds[id].end_datetime).replace(" ", "T"))
                     $('#event-details-modal').modal('hide')
                     _form.find('[name="title"]').focus()
+
+                    let otherText = $("#other-text"),
+                        select = $("select");
+
+                    $(select).on('change', function () {
+                        if (this.value == "Otro...") {
+                            $(otherText).style.zIndex = 0 + "";
+                        } else {
+                            $(otherText).val(this.value);
+                            $(otherText).style.zIndex = -1 + "";
+                        }
+                    });
                 } else {
                     alert("Event is undefined");
                 }
             })
 
             // Delete Button / Deleting an Event
-            $('#delete').click(function() {
+            $('#delete').click(function () {
                 var id = $(this).attr('data-id')
                 if (!!scheds[id]) {
-                    bootbox.confirm('Desea realmente eliminar este evento?', function(result) {
+                    bootbox.confirm('Desea realmente eliminar este evento?', function (result) {
                         if (result === true) {
+                            $('#event-details-modal').modal('hide')
+
                             $.ajax({
                                 url: "ajax/events.php?op=deleteEvents",
                                 type: "POST",
                                 data: { id: id },
-                                success: function(datos) {
+                                success: function (datos) {
                                     bootbox.alert({
                                         title: "Mensaje",
                                         message: datos,
-                                        callback: function() {
-                                            var _details = $('#event-details-modal')
-                                            _details.modal('hide')
+                                        callback: function () {
+                                            // var _details = $('#event-details-modal')
+                                            // _details.modal('hide')
                                             getEvents();
                                         }
                                     });
@@ -131,13 +151,14 @@ function saveEvents(e) {
         data: formData,
         contentType: false,
         processData: false,
-        success: function(datos) {
+        success: function (datos) {
             bootbox.alert({
                 title: "Mensaje",
                 message: datos,
-                callback: function() {
+                callback: function () {
                     var _details = $('#event-details-modal')
                     _details.modal('hide');
+                    $('#schedule-form').trigger("reset");
                     getEvents();
                 }
             });

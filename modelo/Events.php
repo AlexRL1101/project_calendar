@@ -9,28 +9,28 @@ class Events
 	{
 	}
 
-    public function getAll()
-    {
-        $sql = "SELECT * FROM `eventos` WHERE status='1'";
-        return ejecutarConsulta($sql);
-    }
-	public function save($title,$description,$start_datetime,$end_datetime,$color)
+	public function getAll()
 	{
-		$sql = "INSERT INTO eventos (`title`,`description`,`start_datetime`,`end_datetime`,`color`) VALUES ('$title','$description','$start_datetime','$end_datetime','$color')";
+		$sql = "SELECT * FROM eventos WHERE status='1'";
 		return ejecutarConsulta($sql);
 	}
 
-    
-	public function update($id,$title,$description,$start_datetime,$end_datetime, $color)
+	public function save($title, $description, $start_datetime, $end_datetime, $color)
 	{
-		$sql = "UPDATE eventos SET `title` = '{$title}', `description` = '{$description}', `start_datetime` = '{$start_datetime}', `end_datetime` = '{$end_datetime}',  `color` = '{$color}' where `id` = '{$id}'";
+		$sql = "INSERT INTO eventos (title,description,start_datetime,end_datetime,color) VALUES ('$title','$description','$start_datetime','$end_datetime','$color')";
 		return ejecutarConsulta($sql);
 	}
 
-    public function delete ($id)
-    {
-        $sql = "UPDATE eventos SET status='0' WHERE id='$id'";
-        return ejecutarConsulta($sql);
-    }
 
+	public function update($id, $title, $description, $start_datetime, $end_datetime, $color)
+	{
+		$sql = "UPDATE eventos SET title = '{$title}', description = '{$description}', start_datetime = '{$start_datetime}', end_datetime = '{$end_datetime}',  color = '{$color}' where id = '{$id}'";
+		return ejecutarConsulta($sql);
+	}
+
+	public function delete($id)
+	{
+		$sql = "UPDATE eventos SET status='0' WHERE id='$id'";
+		return ejecutarConsulta($sql);
+	}
 }

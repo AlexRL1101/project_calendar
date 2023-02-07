@@ -3,16 +3,17 @@
 }
 
 input#other-text {
-    position: absolute;
-    width: 100px;
-    left: 8px;
-    height: 15px;
+    position: relative;
+    width: 140px;
+    /* left: 8px; */
+    height: auto;
     z-index: -1;
     border-right-color: transparent;
 }
 
 select {
-    width: 130px;
-    height: 21px;
+    position: absolute;
+    width: 170px !important;
+    height: auto;
     z-index: 0;
 }

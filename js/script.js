@@ -90,17 +90,32 @@ function getEvents() {
                     $('#event-details-modal').modal('hide')
                     _form.find('[name="title"]').focus()
 
-                    let otherText = $("#other-text"),
-                        select = $("select");
+                    let otherText = document.querySelector("#other-text"),
+                        select = document.querySelector("#opciones_repetir");
 
-                    $(select).on('change', function () {
-                        if (this.value == "Otro...") {
-                            $(otherText).style.zIndex = 0 + "";
+                    select.addEventListener("change", () => {
+                        if (select.value == "Otro...") {
+                            otherText.style.zIndex = 0 + "";
+                            select.style.zIndex = -1 + "";
                         } else {
-                            $(otherText).val(this.value);
-                            $(otherText).style.zIndex = -1 + "";
+                            otherText.style.zIndex = -1 + "";
+                            select.style.zIndex = 0 + "";
                         }
                     });
+
+                    /* 
+                    
+                    let otherText = document.querySelector("#other-text"),
+                        select = document.querySelector("select");
+
+                        select.addEventListener("change", () => {
+                        if (select.value == "Otro...") {
+                            otherText.style.zIndex = 0 + "";
+                        } else {
+                            otherText.style.zIndex = -1 + "";
+                        }
+                        });
+                    */
                 } else {
                     alert("Event is undefined");
                 }

@@ -33,4 +33,10 @@ class Events
 		$sql = "UPDATE eventos SET status='0' WHERE id='$id'";
 		return ejecutarConsulta($sql);
 	}
+
+	public function traeProximasNotificaciones()
+	{
+		$sql = "SELECT ev.id,ev.title,ev.description,ev.start_datetime,ev.end_datetime,ev.color,br.horas,br.fecha_repitio FROM eventos ev LEFT JOIN bitacora_repetir br ON ev.id = br.id_evento AND br.status = 1 WHERE ev.status = 1 AND ev.start_datetime >= CURRENT_TIMESTAMP();";
+		return ejecutarConsulta($sql);
+	}
 }

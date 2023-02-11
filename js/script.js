@@ -3,10 +3,13 @@ let divRepetir = $('#repetir_accion');
 function init() {
     getEvents();
     $(divRepetir).hide();
+    getNotification();
 
     $("#schedule-form").on("submit", function (e) {
         saveEvents(e);
-    })
+    });
+
+    setInterval(function () { getNotification(); }, 10000);
 }
 
 function getEvents() {
@@ -181,5 +184,43 @@ function saveEvents(e) {
 
     });
 }
+
+function getNotification() {
+    if (!Notification) {
+        bootbox.alert('Este navegador no soporta las notificaciones push')
+        return;
+    }
+
+    if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+    } else {
+        $.ajax({
+            url: "./ajax/events.php?op=traeFechasNotificaciones",
+            type: "POST",
+            success: function (res, textStatus, jqXHR) {
+                let respuesta = jQuery.parseJSON(res);
+
+                if (respuesta.result == true) {
+                    let notificationDetails = respuesta.notif;
+                    for (let i = notificationDetails.length - 1; i >= 0; i--) {
+                        let notificationUrl = notificationDetails[i]['url'];
+                        let notificationObj = new Notification(notificationDetails[i]['title'], {
+                            icon: notificationDetails[i]['icon'],
+                            body: notificationDetails[i]['message'],
+                        });
+                        notificationObj.onclick = function () {
+                            window.open(notificationUrl);
+                            notificationObj.close();
+                        };
+                        setTimeout(function () {
+                            notificationObj.close();
+                        }, 5000);
+                    };
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) { }
+        });
+    }
+};
 
 init();

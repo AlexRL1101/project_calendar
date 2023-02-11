@@ -38,4 +38,29 @@ switch ($_GET["op"]) {
         $response = $events->delete($id);
         echo $response ? "Se elimino correctamente" : "No se pudo eliminar";
         break;
+
+    case 'traeFechasNotificaciones':
+        $result = $events->traeProximasNotificaciones();
+
+        $totalNotification = 0;
+        while ($userNotification = $result->fetch_assoc()) {
+            $data['title'] = $userNotification['title'];
+            $data['message'] = $userNotification['description'];
+            $data['icon'] = 'https://webdamn.com/demo/build-push-notification-system-php-mysql-demo/avatar.png';
+            $data['url'] = 'https://webdamn.com';
+
+            $rows[] = $data;
+
+            $nextime = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + ($userNotification['horas'] * 60));
+
+            // $notification->start_datetime = $nextime;
+            // $notification->id = $userNotification['id'];
+            $notification->updateNotification();
+            $totalNotification++;
+        }
+        $array['notif'] = $rows;
+        $array['count'] = $totalNotification;
+        $array['result'] = true;
+        echo json_encode($array);
+        break;
 }

@@ -1,8 +1,5 @@
-let divRepetir = $('#repetir_accion');
-
 function init() {
     getEvents();
-    $(divRepetir).hide();
     getNotification();
 
     $("#schedule-form").on("submit", function (e) {
@@ -78,11 +75,10 @@ function getEvents() {
 
             // Edit Button
             $('#edit').click(function () {
-                $(divRepetir).show();
-                var id = $(this).attr('data-id')
+                let id = $(this).attr('data-id')
                 if (!!scheds[id]) {
-                    var _form = $('#schedule-form')
-                    console.log(String(scheds[id].start_datetime), String(scheds[id].start_datetime).replace(" ", "\\t"))
+                    let _form = $('#schedule-form')
+                    // console.log(String(scheds[id].start_datetime), String(scheds[id].start_datetime).replace(" ", "\\t"))
 
                     _form.find('[name="id"]').val(id)
                     _form.find('[name="title"]').val(scheds[id].title)
@@ -90,35 +86,15 @@ function getEvents() {
                     _form.find('[name="color"]').val(scheds[id].color)
                     _form.find('[name="start_datetime"]').val(String(scheds[id].start_datetime).replace(" ", "T"))
                     _form.find('[name="end_datetime"]').val(String(scheds[id].end_datetime).replace(" ", "T"))
+
+                    _form.find('[name="numero_repite"]').val(scheds[id].repite)
+                    _form.find('[name="opciones_repetir"]').val(scheds[id].formato_repite)
+                    _form.find('[name="otra_tiempo_notifica"]').val(scheds[id].notifica)
+                    _form.find('[name="notifica_antes"]').val(scheds[id].formato_notifica)
+                    _form.find('[name="idbitacora_repetir"]').val(scheds[id].idbitacora_repetir)
+
                     $('#event-details-modal').modal('hide')
                     _form.find('[name="title"]').focus()
-
-                    let otherText = document.querySelector("#other-text"),
-                        select = document.querySelector("#opciones_repetir");
-
-                    select.addEventListener("change", () => {
-                        if (select.value == "Otro...") {
-                            otherText.style.zIndex = 0 + "";
-                            select.style.zIndex = -1 + "";
-                        } else {
-                            otherText.style.zIndex = -1 + "";
-                            select.style.zIndex = 0 + "";
-                        }
-                    });
-
-                    /* 
-                    
-                    let otherText = document.querySelector("#other-text"),
-                        select = document.querySelector("select");
-
-                        select.addEventListener("change", () => {
-                        if (select.value == "Otro...") {
-                            otherText.style.zIndex = 0 + "";
-                        } else {
-                            otherText.style.zIndex = -1 + "";
-                        }
-                        });
-                    */
                 } else {
                     alert("Event is undefined");
                 }
@@ -187,7 +163,7 @@ function saveEvents(e) {
 
 function getNotification() {
     if (!Notification) {
-        bootbox.alert('Este navegador no soporta las notificaciones push')
+        bootbox.alert('Este navegador no soporta las notificaciones')
         return;
     }
 
@@ -198,25 +174,33 @@ function getNotification() {
             url: "./ajax/events.php?op=traeFechasNotificaciones",
             type: "POST",
             success: function (res, textStatus, jqXHR) {
-                let respuesta = jQuery.parseJSON(res);
+                if (res) {
+                    let respuesta = jQuery.parseJSON(res);
 
-                if (respuesta.result == true) {
-                    let notificationDetails = respuesta.notif;
-                    for (let i = notificationDetails.length - 1; i >= 0; i--) {
-                        let notificationUrl = notificationDetails[i]['url'];
-                        let notificationObj = new Notification(notificationDetails[i]['title'], {
-                            icon: notificationDetails[i]['icon'],
-                            body: notificationDetails[i]['message'],
-                        });
-                        notificationObj.onclick = function () {
-                            window.open(notificationUrl);
-                            notificationObj.close();
+                    if (respuesta.result == true) {
+
+                        let notificationDetails = respuesta.notif;
+
+                        for (let i = notificationDetails.length - 1; i >= 0; i--) {
+
+                            let notificationUrl = notificationDetails[i]['url'],
+                                notificationObj = new Notification(notificationDetails[i]['title'], {
+                                    icon: notificationDetails[i]['icon'],
+                                    body: notificationDetails[i]['message'],
+                                });
+
+                            notificationObj.onclick = function () {
+                                window.open(notificationUrl);
+                                notificationObj.close();
+                            };
+
+                            setTimeout(function () {
+                                notificationObj.close();
+                            }, 5000);
                         };
-                        setTimeout(function () {
-                            notificationObj.close();
-                        }, 5000);
-                    };
-                }
+                    }
+                } else
+                    bootbox.alert('Ocurrio un error al notificar un evento, consulta con un administrador para más detalles')
             },
             error: function (jqXHR, textStatus, errorThrown) { }
         });

@@ -16,35 +16,6 @@
     <script src="./fullcalendar/lib/main.min.js"></script>
     <script src="js/bootbox.min.js"></script>
     <script src="./fullcalendar/lib/locales/es.js"></script>
-    <style>
-        :root {
-            --bs-success-rgb: 71, 222, 152 !important;
-        }
-
-        html,
-        body {
-            height: 100%;
-            width: 100%;
-            font-family: Apple Chancery, cursive;
-        }
-
-        .btn-info.text-light:hover,
-        .btn-info.text-light:focus {
-            background: #000;
-        }
-
-        table,
-        tbody,
-        td,
-        tfoot,
-        th,
-        thead,
-        tr {
-            border-color: #ededed !important;
-            border-style: solid;
-            border-width: 1px !important;
-        }
-    </style>
 </head>
 
 <body class="bg-light">
@@ -93,17 +64,32 @@
                                     <label for="end_datetime" class="control-label">Fin</label>
                                     <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" required>
                                 </div>
-                                <div id="repetir_accion" class="form-group mb-2">
-                                    <label for="end_datetime" class="control-label">Dias a repetir</label><br>
-                                    <select for="select-repite" class="form-control form-control-sm rounded-0" id="opciones_repetir" name="opciones_repetir">
-                                        <option>1</option>
-                                        <option>3</option>
-                                        <option>5</option>
-                                        <option>15</option>
-                                        <option>30</option>
-                                        <option>Otro...</option>
+                                <input type="hidden" id="idbitacora_repetir" name="idbitacora_repetir" />
+                                <div class="form-group mb-2">
+                                    <label for="end_datetime" class="control-label">Repetir cada</label>
+                                    <input type="number" for="variacion-repite" class="form-control form-control-sm rounded-0" min="0" value="3" id="numero_repite" name="numero_repite" required />
+                                </div>
+                                <div class="form-group mb-2">
+                                    <select for="select-repite" class="form-control form-control-sm rounded-0" id="opciones_repetir" name="opciones_repetir" required>
+                                        <option value="Minutos">Minutos</option>
+                                        <option value="Horas">Horas</option>
+                                        <option value="Dias">Dias</option>
+                                        <option value="Semanas">Semanas</option>
+                                        <option value="Meses">Meses</option>
                                     </select>
-                                    <input type="text" for="variacion-repite" class="form-control form-control-sm rounded-0" placeholder="Otro..." id="other-text" name="other-text" />
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="end_datetime" class="control-label">Notifica faltando</label>
+                                    <input type="number" for="variacion-repite" class="form-control form-control-sm rounded-0" min="0" value="5" id="otra_tiempo_notifica" name="otra_tiempo_notifica" required />
+                                </div>
+                                <div class="form-group mb-2">
+                                    <select for="select-repite" class="form-control form-control-sm rounded-0" id="notifica_antes" name="notifica_antes" required>
+                                        <option value="Minutos">Minutos</option>
+                                        <option value="Horas">Horas</option>
+                                        <option value="Dias">Dias</option>
+                                        <option value="Semanas">Semanas</option>
+                                        <option value="Meses">Meses</option>
+                                    </select>
                                 </div>
                             </form>
                         </div>

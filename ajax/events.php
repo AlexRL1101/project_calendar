@@ -11,6 +11,36 @@ $start_datetime = isset($_POST["start_datetime"]) ? limpiarCadena($_POST["start_
 $end_datetime = isset($_POST["end_datetime"]) ? limpiarCadena($_POST["end_datetime"]) : "";
 $color = isset($_POST["color"]) ? limpiarCadena($_POST["color"]) : "";
 
+$idbitacora_repetir = isset($_POST["idbitacora_repetir"]) ? limpiarCadena($_POST["idbitacora_repetir"]) : "";
+$numero_repite = isset($_POST["numero_repite"]) ? limpiarCadena($_POST["numero_repite"]) : "";
+$opciones_repetir = isset($_POST["opciones_repetir"]) ? limpiarCadena($_POST["opciones_repetir"]) : "";
+$otra_tiempo_notifica = isset($_POST["otra_tiempo_notifica"]) ? limpiarCadena($_POST["otra_tiempo_notifica"]) : "";
+$notifica_antes = isset($_POST["notifica_antes"]) ? limpiarCadena($_POST["notifica_antes"]) : "";
+
+date_default_timezone_set('America/Mexico_City');
+$date = date('Y-m-d H:i:s');
+
+function formulasNuevaFechaParaNotificar($fecha, $digito, $formato, $simbolo)
+{
+    switch ($formato) {
+        case 'Minutos':
+            return date('Y-m-d H:i:s', strtotime($simbolo . '' . $digito . ' minutes', strtotime($fecha)));
+            break;
+        case 'Horas':
+            return date('Y-m-d H:i:s', strtotime($simbolo . '' . $digito . ' hour', strtotime($fecha)));
+            break;
+        case 'Dias':
+            return date('Y-m-d H:i:s', strtotime($simbolo . '' . $digito . ' day', strtotime($fecha)));
+            break;
+        case 'Semanas':
+            return date('Y-m-d H:i:s', strtotime($simbolo . '' . $digito . ' week', strtotime($fecha)));
+            break;
+        case 'Meses':
+            return date('Y-m-d H:i:s', strtotime($simbolo . '-' . $digito . ' month', strtotime($fecha)));
+            break;
+    }
+}
+
 switch ($_GET["op"]) {
     case 'getEvents':
         $response = $events->getAll();
@@ -25,11 +55,16 @@ switch ($_GET["op"]) {
         break;
 
     case 'saveEvents':
+        if ($otra_tiempo_notifica)
+            $fecha_notifica = formulasNuevaFechaParaNotificar($start_datetime, $otra_tiempo_notifica, $notifica_antes, '-');
+        else
+            $fecha_notifica = $start_datetime;
+
         if (empty($id)) {
-            $response = $events->save($title, $description, $start_datetime, $end_datetime, $color);
+            $response = $events->save($title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica);
             echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
         } else {
-            $response = $events->update($id, $title, $description, $start_datetime, $end_datetime, $color);
+            $response = $events->update($id, $title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica);
             echo $response ? "Datos actualizados" : "No se pudo actualizar";
         }
         break;
@@ -40,27 +75,39 @@ switch ($_GET["op"]) {
         break;
 
     case 'traeFechasNotificaciones':
-        $result = $events->traeProximasNotificaciones();
-
         $totalNotification = 0;
-        while ($userNotification = $result->fetch_assoc()) {
-            $data['title'] = $userNotification['title'];
-            $data['message'] = $userNotification['description'];
-            $data['icon'] = 'https://webdamn.com/demo/build-push-notification-system-php-mysql-demo/avatar.png';
-            $data['url'] = 'https://webdamn.com';
+        $result = $events->traeProximasNotificaciones($date);
 
-            $rows[] = $data;
+        while ($reg = $result->fetch_assoc()) {
+            if (date('Y-m-d H:i', strtotime($reg['fecha_notifica'])) == date('Y-m-d H:i', strtotime($date))) {
+                $data['title'] = $reg['title'];
+                $data['message'] = $reg['description'];
+                $data['icon'] = '../assets/img/notification.webp';
+                $data['url'] = 'https://localhost:5600';
+                $rows[] = $data;
 
-            $nextime = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + ($userNotification['horas'] * 60));
+                if ($reg['repite'] != 0) {
+                    $fecha1_siguiente = formulasNuevaFechaParaNotificar($reg['start_datetime'], $reg['repite'], $reg['formato_repite'], '+');
+                    $fecha2_siguiente = formulasNuevaFechaParaNotificar($reg['end_datetime'], $reg['repite'], $reg['formato_repite'], '+');
+                    $fecha_notificacion = formulasNuevaFechaParaNotificar($fecha1_siguiente, $reg['notifica'], $reg['formato_notifica'], '-');
 
-            // $notification->start_datetime = $nextime;
-            // $notification->id = $userNotification['id'];
-            $notification->updateNotification();
-            $totalNotification++;
+                    $actualiza = $events->proximaRepeticionDeEvento($fecha1_siguiente, $fecha2_siguiente, $reg['id'], $reg['idbitacora_repetir'], $fecha_notificacion);
+                } else {
+                    $events->desactiva($reg['id'], $reg['idbitacora_repetir']);
+                    $actualiza = true;
+                }
+
+                $totalNotification++;
+            } else
+                $actualiza = 300;
         }
-        $array['notif'] = $rows;
-        $array['count'] = $totalNotification;
-        $array['result'] = true;
-        echo json_encode($array);
+
+        if ($actualiza != 300) {
+            $array['notif'] = $rows;
+            $array['count'] = $totalNotification;
+            $array['result'] = true;
+        }
+
+        echo ($actualiza ? ($actualiza != 300 ? json_encode($array) : $actualiza) : false);
         break;
 }

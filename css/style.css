@@ -1,19 +1,27 @@
-#repetir_accion {
-    display: none;
+:root {
+    --bs-success-rgb: 71, 222, 152 !important;
 }
 
-input#other-text {
-    position: relative;
-    width: 140px;
-    /* left: 8px; */
-    height: auto;
-    z-index: -1;
-    border-right-color: transparent;
+html,
+body {
+    height: 100%;
+    width: 100%;
+    font-family: Apple Chancery, cursive;
 }
 
-select {
-    position: absolute;
-    width: 170px !important;
-    height: auto;
-    z-index: 0;
+.btn-info.text-light:hover,
+.btn-info.text-light:focus {
+    background: #000;
+}
+
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+    border-color: #ededed !important;
+    border-style: solid;
+    border-width: 1px !important;
 }

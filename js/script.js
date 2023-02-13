@@ -2,11 +2,11 @@ function init() {
     getEvents();
     getNotification();
 
-    $("#schedule-form").on("submit", function (e) {
+    $("#schedule-form").on("submit", function(e) {
         saveEvents(e);
     });
 
-    setInterval(function () { getNotification(); }, 10000);
+    setInterval(function() { getNotification(); }, 10000);
 }
 
 function getEvents() {
@@ -15,9 +15,9 @@ function getEvents() {
     var events = [];
 
     $.ajax({
-        url: "ajax/events.php?op=getEvents",
+        url: "ajax/events.php?op=obtenerEventos",
         type: "JSON",
-        success: function (scheds) {
+        success: function(scheds) {
             var scheds = $.parseJSON(scheds);
 
             if (!!scheds) {
@@ -43,7 +43,7 @@ function getEvents() {
                 themeSystem: 'bootstrap',
                 //Random default events
                 events: events,
-                eventClick: function (info) {
+                eventClick: function(info) {
                     var _details = $('#event-details-modal')
                     var id = info.event.id
                     if (!!scheds[id]) {
@@ -59,7 +59,7 @@ function getEvents() {
                         alert("Event is undefined");
                     }
                 },
-                eventDidMount: function (info) {
+                eventDidMount: function(info) {
                     // Do Something after events mounted
                 },
                 editable: true
@@ -68,55 +68,61 @@ function getEvents() {
             calendar.render();
 
             // Form reset listener
-            $('#schedule-form').on('reset', function () {
+            $('#schedule-form').on('reset', function() {
                 $(this).find('input:hidden').val('')
                 $(this).find('input:visible').first().focus()
             })
 
             // Edit Button
-            $('#edit').click(function () {
-                let id = $(this).attr('data-id')
-                if (!!scheds[id]) {
+            $('#edit').click(function() {
+                let id = $(this).attr('data-id');
+                if (id) {
                     let _form = $('#schedule-form')
-                    // console.log(String(scheds[id].start_datetime), String(scheds[id].start_datetime).replace(" ", "\\t"))
+                    $.ajax({
+                        url: "ajax/events.php?op=obtenerEvento",
+                        type: "POST",
+                        data: { id: id },
+                        success: function(datos) {
+                            var datos = $.parseJSON(datos);
+                            _form.find('[name="id"]').val(id)
+                            _form.find('[name="title"]').val(datos[id].title)
+                            _form.find('[name="description"]').val(datos[id].description)
+                            _form.find('[name="color"]').val(datos[id].color)
+                            _form.find('[name="start_datetime"]').val(String(datos[id].start_datetime).replace(" ", "T"))
+                            _form.find('[name="end_datetime"]').val(String(datos[id].end_datetime).replace(" ", "T"))
 
-                    _form.find('[name="id"]').val(id)
-                    _form.find('[name="title"]').val(scheds[id].title)
-                    _form.find('[name="description"]').val(scheds[id].description)
-                    _form.find('[name="color"]').val(scheds[id].color)
-                    _form.find('[name="start_datetime"]').val(String(scheds[id].start_datetime).replace(" ", "T"))
-                    _form.find('[name="end_datetime"]').val(String(scheds[id].end_datetime).replace(" ", "T"))
+                            _form.find('[name="numero_repite"]').val(datos[id].repite)
+                            _form.find('[name="opciones_repetir"]').val(datos[id].formato_repite)
+                            _form.find('[name="otra_tiempo_notifica"]').val(datos[id].notifica)
+                            _form.find('[name="notifica_antes"]').val(datos[id].formato_notifica)
+                            _form.find('[name="idbitacora_repetir"]').val(datos[id].idbitacora_repetir)
 
-                    _form.find('[name="numero_repite"]').val(scheds[id].repite)
-                    _form.find('[name="opciones_repetir"]').val(scheds[id].formato_repite)
-                    _form.find('[name="otra_tiempo_notifica"]').val(scheds[id].notifica)
-                    _form.find('[name="notifica_antes"]').val(scheds[id].formato_notifica)
-                    _form.find('[name="idbitacora_repetir"]').val(scheds[id].idbitacora_repetir)
-
-                    $('#event-details-modal').modal('hide')
-                    _form.find('[name="title"]').focus()
+                            $('#event-details-modal').modal('hide')
+                            _form.find('[name="title"]').focus()
+                        }
+                    });
                 } else {
                     alert("Event is undefined");
                 }
             })
 
             // Delete Button / Deleting an Event
-            $('#delete').click(function () {
+            $('#delete').click(function() {
                 var id = $(this).attr('data-id')
                 if (!!scheds[id]) {
-                    bootbox.confirm('Desea realmente eliminar este evento?', function (result) {
+                    bootbox.confirm('Desea realmente eliminar este evento?', function(result) {
                         if (result === true) {
                             $('#event-details-modal').modal('hide')
 
                             $.ajax({
-                                url: "ajax/events.php?op=deleteEvents",
+                                url: "ajax/events.php?op=eliminarEvento",
                                 type: "POST",
                                 data: { id: id },
-                                success: function (datos) {
+                                success: function(datos) {
                                     bootbox.alert({
                                         title: "Mensaje",
                                         message: datos,
-                                        callback: function () {
+                                        callback: function() {
                                             // var _details = $('#event-details-modal')
                                             // _details.modal('hide')
                                             getEvents();
@@ -140,16 +146,16 @@ function saveEvents(e) {
     e.preventDefault();
     var formData = new FormData($("#schedule-form")[0]);
     $.ajax({
-        url: "ajax/events.php?op=saveEvents",
+        url: "ajax/events.php?op=guardarEvento",
         type: "POST",
         data: formData,
         contentType: false,
         processData: false,
-        success: function (datos) {
+        success: function(datos) {
             bootbox.alert({
                 title: "Mensaje",
                 message: datos,
-                callback: function () {
+                callback: function() {
                     var _details = $('#event-details-modal')
                     _details.modal('hide');
                     $('#schedule-form').trigger("reset");
@@ -173,7 +179,7 @@ function getNotification() {
         $.ajax({
             url: "./ajax/events.php?op=traeFechasNotificaciones",
             type: "POST",
-            success: function (res, textStatus, jqXHR) {
+            success: function(res, textStatus, jqXHR) {
                 if (res != 300) {
                     let respuesta = jQuery.parseJSON(res);
 
@@ -189,7 +195,7 @@ function getNotification() {
                                     body: notificationDetails[i]['message'],
                                 });
 
-                            notificationObj.onclick = function () {
+                            notificationObj.onclick = function() {
                                 window.open(notificationUrl);
                                 notificationObj.close();
                             };
@@ -201,7 +207,7 @@ function getNotification() {
                     }
                 }
             },
-            error: function (jqXHR, textStatus, errorThrown) { }
+            error: function(jqXHR, textStatus, errorThrown) {}
         });
     }
 };

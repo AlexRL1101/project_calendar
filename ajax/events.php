@@ -42,7 +42,7 @@ function formulasNuevaFechaParaNotificar($fecha, $digito, $formato, $simbolo)
 }
 
 switch ($_GET["op"]) {
-    case 'getEvents':
+    case 'obtenerEventos':
         $response = $events->getAll();
         $sched_res = [];
         foreach ($response as $row) {
@@ -54,23 +54,23 @@ switch ($_GET["op"]) {
         echo json_encode($sched_res);
         break;
 
-    case 'saveEvents':
+    case 'guardarEvento':
         if ($otra_tiempo_notifica)
             $fecha_notifica = formulasNuevaFechaParaNotificar($start_datetime, $otra_tiempo_notifica, $notifica_antes, '-');
         else
             $fecha_notifica = $start_datetime;
 
         if (empty($id)) {
-            $response = $events->save($title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica);
+            $response = $events->guardar($title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica);
             echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
         } else {
-            $response = $events->update($id, $title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica);
+            $response = $events->actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica);
             echo $response ? "Datos actualizados" : "No se pudo actualizar";
         }
         break;
 
-    case 'deleteEvents':
-        $response = $events->delete($id);
+    case 'eliminarEvento':
+        $response = $events->eliminar($id);
         echo $response ? "Se elimino correctamente" : "No se pudo eliminar";
         break;
 
@@ -107,5 +107,17 @@ switch ($_GET["op"]) {
             }
         else
             echo 300;
+        break;
+
+        case 'obtenerEvento':
+            $response = $events->obtenerEvento($id);
+            $sched_res = [];
+            foreach ($response as $row) {
+                $row['sdate'] = date("F d, Y h:i A", strtotime($row['start_datetime']));
+                $row['edate'] = date("F d, Y h:i A", strtotime($row['end_datetime']));
+                $sched_res[$row['id']] = $row;
+            }
+    
+            echo json_encode($sched_res);
         break;
 }

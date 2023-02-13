@@ -15,7 +15,7 @@ class Events
 		return ejecutarConsulta($sql);
 	}
 
-	public function save($title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica)
+	public function guardar($title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica)
 	{
 		$res = true;
 
@@ -31,7 +31,7 @@ class Events
 	}
 
 
-	public function update($id, $title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica)
+	public function actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica)
 	{
 		$res = true;
 
@@ -46,7 +46,7 @@ class Events
 		return $res;
 	}
 
-	public function delete($id)
+	public function eliminar($id)
 	{
 		$sql = "UPDATE eventos SET status='0' WHERE id='$id'";
 		return ejecutarConsulta($sql);
@@ -93,4 +93,12 @@ class Events
 
 		return $res;
 	}
+
+	
+	public function obtenerEvento($id)
+	{
+		$sql = "SELECT e.*, br.idbitacora_repetir,br.repite,br.formato_repite,br.notifica,br.formato_notifica FROM eventos e LEFT JOIN bitacora_repetir br ON br.id_evento = e.id AND br.status IN (1,2) WHERE e.status IN (1,2) and id='$id'";
+		return ejecutarConsulta($sql);
+	}
+
 }

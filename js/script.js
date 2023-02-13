@@ -174,7 +174,7 @@ function getNotification() {
             url: "./ajax/events.php?op=traeFechasNotificaciones",
             type: "POST",
             success: function (res, textStatus, jqXHR) {
-                if (res) {
+                if (res != 300) {
                     let respuesta = jQuery.parseJSON(res);
 
                     if (respuesta.result == true) {
@@ -194,13 +194,12 @@ function getNotification() {
                                 notificationObj.close();
                             };
 
-                            setTimeout(function () {
-                                notificationObj.close();
-                            }, 5000);
+                            // setTimeout(function () {
+                            //     notificationObj.close();
+                            // }, 5000);
                         };
                     }
-                } else
-                    bootbox.alert('Ocurrio un error al notificar un evento, consulta con un administrador para más detalles')
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) { }
         });

@@ -11,7 +11,7 @@ class Events
 
 	public function getAll()
 	{
-		$sql = "SELECT e.*, br.idbitacora_repetir,br.repite,br.formato_repite,br.notifica,br.formato_notifica FROM eventos e LEFT JOIN bitacora_repetir br ON br.id_evento = e.id AND br.status = 1 WHERE e.status = 1;";
+		$sql = "SELECT e.*, br.idbitacora_repetir,br.repite,br.formato_repite,br.notifica,br.formato_notifica FROM eventos e LEFT JOIN bitacora_repetir br ON br.id_evento = e.id AND br.status IN (1,2) WHERE e.status IN (1,2);";
 		return ejecutarConsulta($sql);
 	}
 
@@ -54,7 +54,7 @@ class Events
 
 	public function traeProximasNotificaciones($date)
 	{
-		$sql = "SELECT ev.id,ev.title,ev.description,ev.start_datetime,ev.end_datetime,ev.color,br.idbitacora_repetir,br.repite,br.formato_repite,br.notifica,br.formato_notifica,br.fecha_repitio,br.fecha_notifica FROM eventos ev INNER JOIN bitacora_repetir br ON ev.id = br.id_evento WHERE ev.status = 1 AND br.status = 1 AND ev.start_datetime >= '$date' ORDER BY br.fecha_notifica ASC LIMIT 1;";
+		$sql = "SELECT ev.id,ev.title,ev.description,ev.start_datetime,ev.end_datetime,ev.color,br.idbitacora_repetir,br.repite,br.formato_repite,br.notifica,br.formato_notifica,br.fecha_repitio,br.fecha_notifica FROM eventos ev INNER JOIN bitacora_repetir br ON ev.id = br.id_evento WHERE ev.status = 1 AND br.status = 1 AND br.fecha_notifica >= '$date' ORDER BY br.fecha_notifica ASC LIMIT 1;";
 		return ejecutarConsulta($sql);
 	}
 
@@ -62,10 +62,10 @@ class Events
 	{
 		$res = true;
 
-		$sql = "UPDATE eventos SET status = 0 WHERE id = '$id';";
+		$sql = "UPDATE eventos SET status = 2 WHERE id = '$id';";
 		ejecutarConsulta($sql) or $res = false;
 
-		$sql = "UPDATE bitacora_repetir SET status = 0 WHERE idbitacora_repetir = '$idbitacora_repetir';";
+		$sql = "UPDATE bitacora_repetir SET status = 2 WHERE idbitacora_repetir = '$idbitacora_repetir';";
 		ejecutarConsulta($sql) or $res = false;
 
 		if ($res) {
@@ -85,10 +85,10 @@ class Events
 	{
 		$res = true;
 
-		$sql = "UPDATE eventos SET status = 0 WHERE id = '$id';";
+		$sql = "UPDATE eventos SET status = 2 WHERE id = '$id';";
 		ejecutarConsulta($sql) or $res = false;
 
-		$sql = "UPDATE bitacora_repetir SET status = 0 WHERE idbitacora_repetir = '$idbitacora_repetir';";
+		$sql = "UPDATE bitacora_repetir SET status = 2 WHERE idbitacora_repetir = '$idbitacora_repetir';";
 		ejecutarConsulta($sql) or $res = false;
 
 		return $res;

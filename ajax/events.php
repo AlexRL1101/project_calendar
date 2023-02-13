@@ -75,39 +75,37 @@ switch ($_GET["op"]) {
         break;
 
     case 'traeFechasNotificaciones':
-        $totalNotification = 0;
-        $result = $events->traeProximasNotificaciones($date);
+        $result = $events->traeProximasNotificaciones(date('Y-m-d H:i', strtotime($date)));
 
-        while ($reg = $result->fetch_assoc()) {
-            if (date('Y-m-d H:i', strtotime($reg['fecha_notifica'])) == date('Y-m-d H:i', strtotime($date))) {
-                $data['title'] = $reg['title'];
-                $data['message'] = $reg['description'];
-                $data['icon'] = '../assets/img/notification.webp';
-                $data['url'] = 'https://localhost:5600';
-                $rows[] = $data;
+        if (mysqli_num_rows($result) > 0)
+            while ($reg = $result->fetch_assoc()) {
+                if (date('Y-m-d H:i', strtotime($reg['fecha_notifica'])) == date('Y-m-d H:i', strtotime($date))) {
+                    $data['title'] = $reg['title'];
+                    $data['message'] = $reg['description'];
+                    $data['icon'] = '../assets/img/notification.webp';
+                    $data['url'] = 'https://localhost:5600';
+                    $rows[] = $data;
 
-                if ($reg['repite'] != 0) {
-                    $fecha1_siguiente = formulasNuevaFechaParaNotificar($reg['start_datetime'], $reg['repite'], $reg['formato_repite'], '+');
-                    $fecha2_siguiente = formulasNuevaFechaParaNotificar($reg['end_datetime'], $reg['repite'], $reg['formato_repite'], '+');
-                    $fecha_notificacion = formulasNuevaFechaParaNotificar($fecha1_siguiente, $reg['notifica'], $reg['formato_notifica'], '-');
+                    if ($reg['repite'] != 0) {
+                        $fecha1_siguiente = formulasNuevaFechaParaNotificar($reg['start_datetime'], $reg['repite'], $reg['formato_repite'], '+');
+                        $fecha2_siguiente = formulasNuevaFechaParaNotificar($reg['end_datetime'], $reg['repite'], $reg['formato_repite'], '+');
+                        $fecha_notificacion = formulasNuevaFechaParaNotificar($fecha1_siguiente, $reg['notifica'], $reg['formato_notifica'], '-');
 
-                    $actualiza = $events->proximaRepeticionDeEvento($fecha1_siguiente, $fecha2_siguiente, $reg['id'], $reg['idbitacora_repetir'], $fecha_notificacion);
-                } else {
-                    $events->desactiva($reg['id'], $reg['idbitacora_repetir']);
-                    $actualiza = true;
-                }
+                        $ejecucion = $events->proximaRepeticionDeEvento($fecha1_siguiente, $fecha2_siguiente, $reg['id'], $reg['idbitacora_repetir'], $fecha_notificacion);
+                    } else {
+                        $ejecucion = $events->desactiva($reg['id'], $reg['idbitacora_repetir']);
+                    }
 
-                $totalNotification++;
-            } else
-                $actualiza = 300;
-        }
+                    $array['notif'] = $rows;
+                    $array['count'] = 0;
+                    $array['result'] = true;
 
-        if ($actualiza != 300) {
-            $array['notif'] = $rows;
-            $array['count'] = $totalNotification;
-            $array['result'] = true;
-        }
-
-        echo ($actualiza ? ($actualiza != 300 ? json_encode($array) : $actualiza) : false);
+                    if ($ejecucion)
+                        echo json_encode($array);
+                } else
+                    echo 300;
+            }
+        else
+            echo 300;
         break;
 }

@@ -65,7 +65,7 @@ switch ($_GET["op"]) {
             echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
         } else {
             $response = $events->actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica);
-            echo $response ? "Datos actualizados" : "No se pudo actualizar";
+            echo $response ? "Datos actualizados correctamente" : "No se pudo actualizar";
         }
         break;
 

@@ -76,7 +76,7 @@ function getEvents() {
             // Edit Button
             $('#edit').click(function() {
                 let id = $(this).attr('data-id');
-                if (id) {
+                if (!!id) {
                     let _form = $('#schedule-form')
                     $.ajax({
                         url: "ajax/events.php?op=obtenerEvento",
@@ -102,7 +102,7 @@ function getEvents() {
                         }
                     });
                 } else {
-                    alert("Event is undefined");
+                    alert("Evento no definido");
                 }
             })
 
@@ -123,8 +123,6 @@ function getEvents() {
                                         title: "Mensaje",
                                         message: datos,
                                         callback: function() {
-                                            // var _details = $('#event-details-modal')
-                                            // _details.modal('hide')
                                             getEvents();
                                         }
                                     });

@@ -7,6 +7,17 @@ function init() {
     });
 
     setInterval(function() { getNotification(); }, 10000);
+
+
+    $('#edit').click(function() {
+        let id = $(this).attr('data-id');
+        editEvents(id);
+    });
+
+    $('#delete').click(function() {
+        let id = $(this).attr('data-id');
+        deleteEvents(id);
+    });
 }
 
 function getEvents() {
@@ -72,69 +83,6 @@ function getEvents() {
                 $(this).find('input:hidden').val('')
                 $(this).find('input:visible').first().focus()
             })
-
-            // Edit Button
-            $('#edit').click(function() {
-                let id = $(this).attr('data-id');
-                if (!!id) {
-                    let _form = $('#schedule-form')
-                    $.ajax({
-                        url: "ajax/events.php?op=obtenerEvento",
-                        type: "POST",
-                        data: { id: id },
-                        success: function(datos) {
-                            var datos = $.parseJSON(datos);
-                            _form.find('[name="id"]').val(id)
-                            _form.find('[name="title"]').val(datos[id].title)
-                            _form.find('[name="description"]').val(datos[id].description)
-                            _form.find('[name="color"]').val(datos[id].color)
-                            _form.find('[name="start_datetime"]').val(String(datos[id].start_datetime).replace(" ", "T"))
-                            _form.find('[name="end_datetime"]').val(String(datos[id].end_datetime).replace(" ", "T"))
-
-                            _form.find('[name="numero_repite"]').val(datos[id].repite)
-                            _form.find('[name="opciones_repetir"]').val(datos[id].formato_repite)
-                            _form.find('[name="otra_tiempo_notifica"]').val(datos[id].notifica)
-                            _form.find('[name="notifica_antes"]').val(datos[id].formato_notifica)
-                            _form.find('[name="idbitacora_repetir"]').val(datos[id].idbitacora_repetir)
-
-                            $('#event-details-modal').modal('hide')
-                            _form.find('[name="title"]').focus()
-                        }
-                    });
-                } else {
-                    alert("Evento no definido");
-                }
-            })
-
-            // Delete Button / Deleting an Event
-            $('#delete').click(function() {
-                var id = $(this).attr('data-id')
-                if (!!scheds[id]) {
-                    bootbox.confirm('Desea realmente eliminar este evento?', function(result) {
-                        if (result === true) {
-                            $('#event-details-modal').modal('hide')
-
-                            $.ajax({
-                                url: "ajax/events.php?op=eliminarEvento",
-                                type: "POST",
-                                data: { id: id },
-                                success: function(datos) {
-                                    bootbox.alert({
-                                        title: "Mensaje",
-                                        message: datos,
-                                        callback: function() {
-                                            getEvents();
-                                        }
-                                    });
-                                }
-
-                            });
-                        }
-                    });
-                } else {
-                    alert("Evento no definido");
-                }
-            })
         }
 
     });
@@ -197,10 +145,6 @@ function getNotification() {
                                 window.open(notificationUrl);
                                 notificationObj.close();
                             };
-
-                            // setTimeout(function () {
-                            //     notificationObj.close();
-                            // }, 5000);
                         };
                     }
                 }
@@ -209,5 +153,57 @@ function getNotification() {
         });
     }
 };
+
+function editEvents(id) {
+    let _form = $('#schedule-form')
+    $.ajax({
+        url: "ajax/events.php?op=obtenerEvento",
+        type: "POST",
+        data: { id: id },
+        success: function(datos) {
+            var datos = $.parseJSON(datos);
+            _form.find('[name="id"]').val(id)
+            _form.find('[name="title"]').val(datos[id].title)
+            _form.find('[name="description"]').val(datos[id].description)
+            _form.find('[name="color"]').val(datos[id].color)
+            _form.find('[name="start_datetime"]').val(String(datos[id].start_datetime).replace(" ", "T"))
+            _form.find('[name="end_datetime"]').val(String(datos[id].end_datetime).replace(" ", "T"))
+
+            _form.find('[name="numero_repite"]').val(datos[id].repite)
+            _form.find('[name="opciones_repetir"]').val(datos[id].formato_repite)
+            _form.find('[name="otra_tiempo_notifica"]').val(datos[id].notifica)
+            _form.find('[name="notifica_antes"]').val(datos[id].formato_notifica)
+            _form.find('[name="idbitacora_repetir"]').val(datos[id].idbitacora_repetir)
+
+            $('#event-details-modal').modal('hide')
+            _form.find('[name="title"]').focus()
+        }
+    });
+}
+
+
+function deleteEvents(id) {
+    bootbox.confirm('Desea realmente eliminar este evento?', function(result) {
+        if (result === true) {
+            $('#event-details-modal').modal('hide')
+
+            $.ajax({
+                url: "ajax/events.php?op=eliminarEvento",
+                type: "POST",
+                data: { id: id },
+                success: function(datos) {
+                    bootbox.alert({
+                        title: "Mensaje",
+                        message: datos,
+                        callback: function() {
+                            getEvents();
+                        }
+                    });
+                }
+
+            });
+        }
+    });
+}
 
 init();

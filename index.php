@@ -70,6 +70,7 @@ $_SESSION['idusuario'] = 2;
                                     <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" required>
                                 </div>
                                 <input type="hidden" id="idbitacora_repetir" name="idbitacora_repetir" />
+
                                 <div class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Repetir cada</label>
                                     <input type="number" for="variacion-repite" class="form-control form-control-sm rounded-0" min="0" value="3" id="numero_repite" name="numero_repite" required />
@@ -83,6 +84,12 @@ $_SESSION['idusuario'] = 2;
                                         <option value="Meses">Meses</option>
                                     </select>
                                 </div>
+
+                                <div class="form-group mb-2">
+                                    <label for="end_datetime" class="control-label">Durante (meses)</label>
+                                    <input type="number" for="variacion-repite" class="form-control form-control-sm rounded-0" min="0" placeholder="Cantidad de meses" id="durante_tiempo" name="durante_tiempo" />
+                                </div>
+
                                 <div class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Notifica faltando</label>
                                     <input type="number" for="variacion-repite" class="form-control form-control-sm rounded-0" min="0" value="5" id="otra_tiempo_notifica" name="otra_tiempo_notifica" required />

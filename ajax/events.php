@@ -15,6 +15,7 @@ $dpto = isset($_POST["dpto"]) ? limpiarCadena($_POST["dpto"]) : ""; ////////////
 
 $idbitacora_repetir = isset($_POST["idbitacora_repetir"]) ? limpiarCadena($_POST["idbitacora_repetir"]) : "";
 $numero_repite = isset($_POST["numero_repite"]) ? limpiarCadena($_POST["numero_repite"]) : "";
+$durante_tiempo = isset($_POST["durante_tiempo"]) ? limpiarCadena($_POST["durante_tiempo"]) : NULL;
 
 $finalizacion_repeticion = isset($_POST["finalizacion_repeticion"]) ? limpiarCadena($_POST["finalizacion_repeticion"]) : "";
 
@@ -51,6 +52,37 @@ function formulasNuevaFechaParaNotificar($fecha, $digito, $formato, $simbolo)
     }
 }
 
+function get_format($df)
+{
+    $str = '';
+    $str .= ($df->invert == 1) ? ' - ' : '';
+
+    if ($df->m > 0) {
+        // month
+        $str .= ($df->m > 1) ? $df->m . ' Months ' : $df->m . ' Month ';
+    }
+    if ($df->d > 0) {
+        $weeks = floor($df->days / 7);
+
+        // days
+        $str .= ($weeks > 0) ? $weeks . ' Weeks ' : $weeks . ' Week ';
+    }
+    if ($df->d > 0) {
+        // days
+        $str .= ($df->d > 1) ? $df->d . ' Days ' : $df->d . ' Day ';
+    }
+    if ($df->h > 0) {
+        // hours
+        $str .= ($df->h > 1) ? $df->h . ' Hours ' : $df->h . ' Hour ';
+    }
+    if ($df->i > 0) {
+        // minutes
+        $str .= ($df->i > 1) ? $df->i . ' Minutes ' : $df->i . ' Minute ';
+    }
+
+    echo $str;
+}
+
 
 switch ($_GET["op"]) {
     case 'obtenerEventos':
@@ -66,18 +98,37 @@ switch ($_GET["op"]) {
         break;
 
     case 'guardarEvento':
+        $fechas_guarda = array();
+
         if ($otra_tiempo_notifica)
             $fecha_notifica = formulasNuevaFechaParaNotificar($start_datetime, $otra_tiempo_notifica, $notifica_antes, '-');
         else
             $fecha_notifica = $start_datetime;
 
-        if (empty($id)) {
-            $response = $events->guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica, $idusuario);
-            echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
-        } else {
-            $response = $events->actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica);
-            echo $response ? "Datos actualizados" : "No se pudo actualizar";
+        if ($durante_tiempo) {
+            $nueva_fecha_hasta = formulasNuevaFechaParaNotificar($start_datetime, $durante_tiempo, 'Meses', '+');
+
+            $date1 = new DateTime("2023-07-02");
+            $date2 = new DateTime("now");
+            $diff = $date1->diff($date2);
+
+            echo get_format($diff);
+            // if ($durante_tiempo)
+            //     for ($i = 0; $i < $durante_tiempo; $i++) {
+            //         $nueva_fecha = formulasNuevaFechaParaNotificar($start_datetime, $durante_tiempo, 'Meses', '-');
+            //     }
         }
+
+        // if (empty($id)) {
+        //     $response = $events->guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica, $idusuario);
+        //     echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
+        // } else {
+        //     $response = $events->actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica);
+        //     echo $response ? "Datos actualizados" : "No se pudo actualizar";
+        // }
+
+        echo "Testeo";
+
         break;
 
     case 'eliminarEvento':

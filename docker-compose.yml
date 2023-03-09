@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   php-apache-environment:
-    container_name: php-apache5
+    container_name: php-apache12
     build:
       context: ./
       dockerfile: Dockerfile
@@ -10,9 +10,9 @@ services:
     volumes:
       - ./:/var/www/html/
     ports:
-      - 5600:80
+      - 5900:80
   db:
-    container_name: db5
+    container_name: db9
     image: mysql
     restart: always
     environment:
@@ -21,4 +21,4 @@ services:
       MYSQL_USER: MYSQL_USER
       MYSQL_PASSWORD: MYSQL_PASSWORD
     ports:
-      - "9000:3306"
+      - "9200:3306"

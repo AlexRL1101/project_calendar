@@ -15,11 +15,11 @@ class Events
 		return ejecutarConsulta($sql);
 	}
 
-	public function guardar($title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica)
+	public function guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto,$numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica, $idusuario)
 	{
 		$res = true;
 
-		$sql = "INSERT INTO eventos (title,description,start_datetime,end_datetime,color) VALUES ('$title','$description','$start_datetime','$end_datetime','$color')";
+		$sql = "INSERT INTO eventos (title,description,start_datetime,end_datetime,color,idusuario,dpto) VALUES ('$title','$description','$start_datetime','$end_datetime','$color','$idusuario','$dpto')";
 		$id_evento = ejecutarConsulta_retornarID($sql) or $res = false;
 
 		if ($id_evento) {
@@ -31,11 +31,11 @@ class Events
 	}
 
 
-	public function actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica)
+	public function actualizar($id, $title, $description, $start_datetime, $end_datetime, $color,$dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica)
 	{
 		$res = true;
 
-		$sql = "UPDATE eventos SET title = '$title', description = '$description', start_datetime = '$start_datetime', end_datetime = '$end_datetime', color = '$color' where id = '$id';";
+		$sql = "UPDATE eventos SET title = '$title', description = '$description', start_datetime = '$start_datetime', end_datetime = '$end_datetime', color = '$color', dpto = '$dpto'  where id = '$id';";
 		ejecutarConsulta($sql) or $res = false;
 
 		if ($res) {
@@ -54,7 +54,7 @@ class Events
 
 	public function traeProximasNotificaciones($date)
 	{
-		$sql = "SELECT ev.id,ev.title,ev.description,ev.start_datetime,ev.end_datetime,ev.color,br.idbitacora_repetir,br.repite,br.formato_repite,br.notifica,br.formato_notifica,br.fecha_repitio,br.fecha_notifica FROM eventos ev INNER JOIN bitacora_repetir br ON ev.id = br.id_evento WHERE ev.status = 1 AND br.status = 1 AND br.fecha_notifica >= '$date' ORDER BY br.fecha_notifica ASC LIMIT 1;";
+		$sql = "SELECT ev.id,ev.title,ev.description,ev.start_datetime,ev.end_datetime,ev.color,ev.dpto,br.idbitacora_repetir,br.repite,br.formato_repite,br.notifica,br.formato_notifica,br.fecha_repitio,br.fecha_notifica FROM eventos ev INNER JOIN bitacora_repetir br ON ev.id = br.id_evento WHERE ev.status = 1 AND br.status = 1 AND br.fecha_notifica >= '$date' ORDER BY br.fecha_notifica ASC LIMIT 1;";
 		return ejecutarConsulta($sql);
 	}
 
@@ -69,7 +69,7 @@ class Events
 		ejecutarConsulta($sql) or $res = false;
 
 		if ($res) {
-			$sql = "INSERT INTO eventos(title,description,start_datetime,end_datetime,color) SELECT title,description,'$date1','$date2',color FROM eventos WHERE id = '$id';";
+			$sql = "INSERT INTO eventos(title,description,start_datetime,end_datetime,color,dpto,idusuario) SELECT title,description,'$date1','$date2',color,dpto,idusuario FROM eventos WHERE id = '$id';";
 			$id_evento = ejecutarConsulta_retornarID($sql) or $res = false;
 
 			if ($id_evento) {
@@ -99,6 +99,20 @@ class Events
 	{
 		$sql = "SELECT e.*, br.idbitacora_repetir,br.repite,br.formato_repite,br.notifica,br.formato_notifica FROM eventos e LEFT JOIN bitacora_repetir br ON br.id_evento = e.id AND br.status IN (1,2) WHERE e.status IN (1,2) and id='$id'";
 		return ejecutarConsulta($sql);
+	}
+
+	public function listarFiltradoEventos(){
+
+		$sql = "SELECT * FROM eventos where status='1'";
+		return ejecutarConsulta($sql);
+		
+	}
+
+	public function listarFiltradoEventosFecha($buscarFechaInicio,$buscarFechaFin){
+
+		$sql = "SELECT * FROM eventos where start_datetime between '$buscarFechaInicio' and '$buscarFechaFin' and status='1'";
+		return ejecutarConsulta($sql);
+		
 	}
 
 }

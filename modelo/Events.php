@@ -15,26 +15,28 @@ class Events
 		return ejecutarConsulta($sql);
 	}
 
-	public function guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica, $idusuario)
+	public function guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto, $fecha_notifica, $idusuario, $fechas_guarda, $durante_tiempo)
 	{
 		$res = true;
 
-		$sql = "INSERT INTO eventos (title,description,start_datetime,end_datetime,color,idusuario,dpto) VALUES ('$title','$description','$start_datetime','$end_datetime','$color','$idusuario','$dpto')";
-		$id_evento = ejecutarConsulta_retornarID($sql) or $res = false;
-
-		if ($id_evento)
-			for ($i = 0; $i < $numero_repite; $i++) {
-				if ($res) {
-					$sql = "INSERT INTO bitacora_repetir(id_evento,repite,formato_repite,notifica,formato_notifica,fecha_repitio,fecha_notifica,status) VALUES ('$id_evento','$numero_repite','$opciones_repetir','$otra_tiempo_notifica','$notifica_antes','$start_datetime','$fecha_notifica',1);";
-					ejecutarConsulta($sql) or $res = false;
-				}
+		if ($durante_tiempo)
+			foreach ($fechas_guarda as $key => $value) {
+				print_r($value);
 			}
+		// for ($i = 0; $i < count($fechas_guarda); $i++) {
+		// 	$sql = "INSERT INTO eventos (title,description,start_datetime,end_datetime,color,idusuario,dpto, fecha_notifica) VALUES ('$title','$description','$fechas_guarda[$i][0]','$fechas_guarda[$i][1]','$color','$idusuario','$dpto','$fechas_guarda[$i][3]')";
+		// 	ejecutarConsulta($sql) or $res = false;
+		// }
+		else {
+			$sql = "INSERT INTO eventos (title,description,start_datetime,end_datetime,color,idusuario,dpto, fecha_notifica) VALUES ('$title','$description','$start_datetime','$end_datetime','$color','$idusuario','$dpto', '$fecha_notifica')";
+			ejecutarConsulta($sql) or $res = false;
+		}
 
 		return $res;
 	}
 
 
-	public function actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica)
+	public function actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica, $fechas_guarda, $durante_tiempo)
 	{
 		$res = true;
 

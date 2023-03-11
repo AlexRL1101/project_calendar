@@ -46,41 +46,58 @@ function formulasNuevaFechaParaNotificar($fecha, $digito, $formato, $simbolo)
             return date('Y-m-d H:i:s', strtotime($simbolo . '' . $digito . ' week', strtotime($fecha)));
             break;
         case 'Meses':
-            return date('Y-m-d H:i:s', strtotime($simbolo . '-' . $digito . ' month', strtotime($fecha)));
-
+            return date('Y-m-d H:i:s', strtotime($simbolo . '' . $digito . ' month', strtotime($fecha)));
             break;
     }
 }
 
-function get_format($df)
+function cuantasVecesEntraEnRango($df, $tipo_saber)
 {
-    $str = '';
-    $str .= ($df->invert == 1) ? ' - ' : '';
+    // $str = '';
+    // $str .= ($df->invert == 1) ? ' - ' : '';
 
-    if ($df->m > 0) {
-        // month
-        $str .= ($df->m > 1) ? $df->m . ' Months ' : $df->m . ' Month ';
-    }
-    if ($df->d > 0) {
-        $weeks = floor($df->days / 7);
+    // if ($df->m > 0) {
+    //     // month
+    //     $str .= ($df->m > 1) ? $df->m . ' Months ' : $df->m . ' Month ';
+    // }
+    // if ($df->d > 0) {
+    //     $weeks = floor($df->days / 7);
 
-        // days
-        $str .= ($weeks > 0) ? $weeks . ' Weeks ' : $weeks . ' Week ';
-    }
-    if ($df->d > 0) {
-        // days
-        $str .= ($df->d > 1) ? $df->d . ' Days ' : $df->d . ' Day ';
-    }
-    if ($df->h > 0) {
-        // hours
-        $str .= ($df->h > 1) ? $df->h . ' Hours ' : $df->h . ' Hour ';
-    }
-    if ($df->i > 0) {
-        // minutes
-        $str .= ($df->i > 1) ? $df->i . ' Minutes ' : $df->i . ' Minute ';
-    }
+    //     // days
+    //     $str .= ($weeks > 0) ? $weeks . ' Weeks ' : $weeks . ' Week ';
+    // }
+    // if ($df->d > 0) {
+    //     // days
+    //     $str .= ($df->d > 1) ? $df->d . ' Days ' : $df->d . ' Day ';
+    // }
+    // if ($df->h > 0) {
+    //     // hours
+    //     $str .= ($df->h > 1) ? $df->h . ' Hours ' : $df->h . ' Hour ';
+    // }
+    // if ($df->i > 0) {
+    //     // minutes
+    //     $str .= ($df->i > 1) ? $df->i . ' Minutes ' : $df->i . ' Minute ';
+    // }
 
-    echo $str;
+    // echo $str;
+
+    switch ($tipo_saber) {
+        case 'Minutos':
+            return $df->format('%i');
+            break;
+        case 'Horas':
+            return $df->format('%h');
+            break;
+        case 'Dias':
+            return $df->format('%a');
+            break;
+        case 'Semanas':
+            return floor($df->days / 7);
+            break;
+        case 'Meses':
+            return $df->format('%m');
+            break;
+    }
 }
 
 
@@ -108,26 +125,33 @@ switch ($_GET["op"]) {
         if ($durante_tiempo) {
             $nueva_fecha_hasta = formulasNuevaFechaParaNotificar($start_datetime, $durante_tiempo, 'Meses', '+');
 
-            $date1 = new DateTime("2023-07-02");
-            $date2 = new DateTime("now");
+            $date1 = new DateTime($start_datetime);
+            $date2 = new DateTime($nueva_fecha_hasta);
             $diff = $date1->diff($date2);
 
-            echo get_format($diff);
-            // if ($durante_tiempo)
-            //     for ($i = 0; $i < $durante_tiempo; $i++) {
-            //         $nueva_fecha = formulasNuevaFechaParaNotificar($start_datetime, $durante_tiempo, 'Meses', '-');
-            //     }
+            $cantidad_numero = cuantasVecesEntraEnRango($diff, $opciones_repetir);
+            $repite = floor($cantidad_numero / $numero_repite) + 1;
+
+            $primeraFecha1 =  formulasNuevaFechaParaNotificar($start_datetime, 0, $notifica_antes, '+');
+            $primeraFecha2 =  formulasNuevaFechaParaNotificar($end_datetime, 0, $notifica_antes, '+');
+
+            array_push($fechas_guarda, [$primeraFecha1, $primeraFecha2, formulasNuevaFechaParaNotificar($primeraFecha1, $otra_tiempo_notifica, $notifica_antes, '-')]);
+
+            for ($i = 1; $i < $repite; $i++) {
+                $nueva_fecha1 = formulasNuevaFechaParaNotificar($fechas_guarda[$i - 1][0], $numero_repite, $opciones_repetir, '+');
+                $nueva_fecha2 = formulasNuevaFechaParaNotificar($fechas_guarda[$i - 1][1], $numero_repite, $opciones_repetir, '+');
+
+                array_push($fechas_guarda, [$nueva_fecha1, $nueva_fecha2, formulasNuevaFechaParaNotificar($nueva_fecha1, $otra_tiempo_notifica, $notifica_antes, '-')]);
+            }
         }
 
-        // if (empty($id)) {
-        //     $response = $events->guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica, $idusuario);
-        //     echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
-        // } else {
-        //     $response = $events->actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica);
-        //     echo $response ? "Datos actualizados" : "No se pudo actualizar";
-        // }
-
-        echo "Testeo";
+        if (empty($id)) {
+            $response = $events->guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto, $notifica_antes, $fecha_notifica, $idusuario, $fechas_guarda, $durante_tiempo);
+            echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
+        } else {
+            $response = $events->actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica, $fechas_guarda, $durante_tiempo);
+            echo $response ? "Datos actualizados" : "No se pudo actualizar";
+        }
 
         break;
 

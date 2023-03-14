@@ -95,7 +95,12 @@ function cuantasVecesEntraEnRango($df, $tipo_saber)
             return floor($df->days / 7);
             break;
         case 'Meses':
-            return $df->format('%m');
+            if ($df->y > 0) {
+                $year_month = 12 * $df->y;
+
+                return $df->format('%m') + $year_month;
+            } else
+                return $df->format('%m');
             break;
     }
 }
@@ -145,13 +150,15 @@ switch ($_GET["op"]) {
             }
         }
 
-        if (empty($id)) {
-            $response = $events->guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto, $notifica_antes, $fecha_notifica, $idusuario, $fechas_guarda, $durante_tiempo);
-            echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
-        } else {
-            $response = $events->actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica, $fechas_guarda, $durante_tiempo);
-            echo $response ? "Datos actualizados" : "No se pudo actualizar";
-        }
+        print_r($fechas_guarda);
+
+        // if (empty($id)) {
+        //     $response = $events->guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto, $notifica_antes, $fecha_notifica, $idusuario, $fechas_guarda, $durante_tiempo);
+        //     echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
+        // } else {
+        //     $response = $events->actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica, $fechas_guarda, $durante_tiempo);
+        //     echo $response ? "Datos actualizados" : "No se pudo actualizar";
+        // }
 
         break;
 

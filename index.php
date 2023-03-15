@@ -1,7 +1,7 @@
 <?php
-session_start();
-
-$_SESSION['idusuario'] = 2;
+ session_start();
+ $idrol = $_SESSION['idrol'];
+ $idusuario =  $_SESSION['idusuario'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,16 +26,21 @@ $_SESSION['idusuario'] = 2;
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient" id="topNavBar">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                Calendario
-            </a>
-
+        <a class="navbar-link" style="color: #FCF3CF;" href="./login/logout.php">Cerrar Sesión</a>
+            <a class="navbar-brand" href="index.php">Calendario</a>
+            <a class="navbar-brand" href="./events/index.php">Eventos </a>
+        <?php 
+            if($_SESSION['idrol']== 2){
+            echo '<a class="navbar-brand" href="users/index.php">Usuarios</a>';
+        }
+        ?>
             <div>
-                <b class="text-light">Calendario de Eventos</b>
+                <b class="text-light">Calendario</b>
             </div>
         </div>
     </nav>
     <div class="container py-5" id="page-container">
+        <p style="margin-left: 55rem;"><?php echo $_SESSION['nombre'] ?></p>
         <div class="row">
             <div class="col-md-9">
                 <div id="calendar"></div>
@@ -59,7 +64,17 @@ $_SESSION['idusuario'] = 2;
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="color" class="control-label">Color</label>
-                                    <input class="form-control" id="color" type="color" name="color">
+                                    <select name="color" class="form-control" id="color">
+									  <option value="">Seleccionar</option>
+						                <option style="color:#0071c5;" value="#0071c5">&#9724; Azul oscuro</option>
+                                        <option style="color:#40E0D0;" value="#40E0D0">&#9724; Turquesa</option>
+                                        <option style="color:#008000;" value="#008000">&#9724; Verde</option>						  
+                                        <option style="color:#FFD700;" value="#FFD700">&#9724; Amarillo</option>
+                                        <option style="color:#FF8C00;" value="#FF8C00">&#9724; Naranja</option>
+                                        <option style="color:#FF0000;" value="#FF0000">&#9724; Rojo</option>
+                                        <option style="color:#000;" value="#000">&#9724; Negro</option>
+						  
+						</select>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="start_datetime" class="control-label">Inicio</label>
@@ -71,11 +86,11 @@ $_SESSION['idusuario'] = 2;
                                 </div>
                                 <input type="hidden" id="idbitacora_repetir" name="idbitacora_repetir" />
 
-                                <div class="form-group mb-2">
+                                <div id="div-repetir" class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Repetir cada</label>
                                     <input type="number" for="variacion-repite" class="form-control form-control-sm rounded-0" min="0" value="3" id="numero_repite" name="numero_repite" required />
                                 </div>
-                                <div class="form-group mb-2">
+                                <div id="select-repetir" class="form-group mb-2">
                                     <select for="select-repite" class="form-control form-control-sm rounded-0" id="opciones_repetir" name="opciones_repetir" required>
                                         <option value="Minutos">Minutos</option>
                                         <option value="Horas">Horas</option>
@@ -85,7 +100,7 @@ $_SESSION['idusuario'] = 2;
                                     </select>
                                 </div>
 
-                                <div class="form-group mb-2">
+                                <div id="durante" class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Durante (meses)</label>
                                     <input type="number" for="variacion-repite" class="form-control form-control-sm rounded-0" min="0" placeholder="Cantidad de meses" id="durante_tiempo" name="durante_tiempo" />
                                 </div>
@@ -102,6 +117,10 @@ $_SESSION['idusuario'] = 2;
                                         <option value="Semanas">Semanas</option>
                                         <option value="Meses">Meses</option>
                                     </select>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="dpto" class="control-label">Departamento</label>
+                                    <input type="text" class="form-control form-control-sm rounded-0" name="dpto" id="dpto" required>
                                 </div>
                             </form>
                         </div>
@@ -124,6 +143,7 @@ $_SESSION['idusuario'] = 2;
                 <div class="modal-header rounded-0">
                     <h5 class="modal-title">Detalles del evento</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <input type="hidden" id="idusuario" name="idusuario" value="<?php echo $idusuario ?>">
                 </div>
                 <div class="modal-body rounded-0">
                     <div class="container-fluid">
@@ -143,6 +163,7 @@ $_SESSION['idusuario'] = 2;
                 </div>
                 <div class="modal-footer rounded-0">
                     <div class="text-end">
+                        <button type="button" class="btn btn-success btn-sm rounded-0" id="hecho" data-id="">Hecho</button>
                         <button type="button" class="btn btn-warning btn-sm rounded-0" id="edit" data-id="">Editar</button>
                         <button type="button" class="btn btn-danger btn-sm rounded-0" id="delete" data-id="">Eliminar</button>
                         <button type="button" class="btn btn-info btn-sm rounded-0" data-bs-dismiss="modal">Cerrar</button>

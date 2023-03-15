@@ -180,6 +180,12 @@ function editEvents(id) {
         data: { id: id },
         success: function(datos) {
             var datos = $.parseJSON(datos);
+
+            $("#select-repetir").hide();
+            $("#div-repetir").hide();
+            $("#durante_tiempo").hide();
+            $("#durante").hide();
+
             _form.find('[name="id"]').val(id)
             _form.find('[name="title"]').val(datos[id].title)
             _form.find('[name="description"]').val(datos[id].description)
@@ -188,9 +194,9 @@ function editEvents(id) {
             _form.find('[name="end_datetime"]').val(String(datos[id].end_datetime).replace(" ", "T"))
             _form.find('[name="dpto"]').val(datos[id].dpto) //////////////
 
-            _form.find('[name="numero_repite"]').val(datos[id].repite)
-            _form.find('[name="opciones_repetir"]').val(datos[id].formato_repite)
-            _form.find('[name="otra_tiempo_notifica"]').val(datos[id].notifica)
+            // _form.find('[name="numero_repite"]').val(datos[id].repite)
+            // _form.find('[name="opciones_repetir"]').val(datos[id].formato_repite)
+            _form.find('[name="otra_tiempo_notifica"]').val(datos[id].tiempo_notifica)
             _form.find('[name="notifica_antes"]').val(datos[id].formato_notifica)
             _form.find('[name="idbitacora_repetir"]').val(datos[id].idbitacora_repetir)
 

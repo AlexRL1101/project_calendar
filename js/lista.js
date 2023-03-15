@@ -29,22 +29,20 @@ function listar(buscar_inicio, buscar_fin) {
             data: { buscar_inicio: buscar_inicio, buscar_fin: buscar_fin },
             type: "POST",
         },
-        language: {
-            lengthMenu: "Mostrar : MENU registros",
-            buttons: {
-                copyTitle: "Tabla Copiada",
-                copySuccess: {
-                    _: "%d líneas copiadas",
-                    1: "1 línea copiada",
-                },
-            },
-        },
         columns: [
             { data: 'titulo' },
             { data: 'descripcion' },
             { data: 'fecha_inicio' },
             { data: 'departamento' },
         ],
+        language: {
+            "lengthMenu": "Mostrar _MENU_ registros",
+            "zeroRecords": "No se encontraron datos",
+            "info": "Mostrando _PAGE_ de _PAGES_",
+            "infoEmpty": "No se encontraron registros disponibles",
+            "infoFiltered": "(filtered from _MAX_ total records)",
+            "search": "Buscar",
+        },
         bDestroy: true,
         iDisplayLength: 10, //Paginación
         // "bStateSave": true,

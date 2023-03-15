@@ -53,34 +53,6 @@ function formulasNuevaFechaParaNotificar($fecha, $digito, $formato, $simbolo)
 
 function cuantasVecesEntraEnRango($df, $tipo_saber)
 {
-    // $str = '';
-    // $str .= ($df->invert == 1) ? ' - ' : '';
-
-    // if ($df->m > 0) {
-    //     // month
-    //     $str .= ($df->m > 1) ? $df->m . ' Months ' : $df->m . ' Month ';
-    // }
-    // if ($df->d > 0) {
-    //     $weeks = floor($df->days / 7);
-
-    //     // days
-    //     $str .= ($weeks > 0) ? $weeks . ' Weeks ' : $weeks . ' Week ';
-    // }
-    // if ($df->d > 0) {
-    //     // days
-    //     $str .= ($df->d > 1) ? $df->d . ' Days ' : $df->d . ' Day ';
-    // }
-    // if ($df->h > 0) {
-    //     // hours
-    //     $str .= ($df->h > 1) ? $df->h . ' Hours ' : $df->h . ' Hour ';
-    // }
-    // if ($df->i > 0) {
-    //     // minutes
-    //     $str .= ($df->i > 1) ? $df->i . ' Minutes ' : $df->i . ' Minute ';
-    // }
-
-    // echo $str;
-
     switch ($tipo_saber) {
         case 'Minutos':
             return $df->format('%i');
@@ -94,21 +66,21 @@ function cuantasVecesEntraEnRango($df, $tipo_saber)
         case 'Semanas':
             return floor($df->days / 7);
             break;
-        case 'Meses':
-            if ($df->y > 0) {
-                $year_month = 12 * $df->y;
-
-                return $df->format('%m') + $year_month;
-            } else
-                return $df->format('%m');
-            break;
+            case 'Meses':
+                if ($df->y > 0) {
+                    $year_month = 12 * $df->y;
+    
+                    return $df->format('%m') + $year_month;
+                } else
+                    return $df->format('%m');
+                break;
     }
 }
 
 
 switch ($_GET["op"]) {
     case 'obtenerEventos':
-        $response = $events->getAll();
+        $response = $events->obtenerEventos();
         $sched_res = [];
         foreach ($response as $row) {
             $row['sdate'] = date("F d, Y h:i A", strtotime($row['start_datetime']));
@@ -150,15 +122,17 @@ switch ($_GET["op"]) {
             }
         }
 
-        print_r($fechas_guarda);
 
-        // if (empty($id)) {
-        //     $response = $events->guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto, $notifica_antes, $fecha_notifica, $idusuario, $fechas_guarda, $durante_tiempo);
-        //     echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
-        // } else {
-        //     $response = $events->actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $dpto, $numero_repite, $opciones_repetir, $otra_tiempo_notifica, $notifica_antes, $idbitacora_repetir, $fecha_notifica, $fechas_guarda, $durante_tiempo);
-        //     echo $response ? "Datos actualizados" : "No se pudo actualizar";
-        // }
+        if (empty($id)) {
+            $response = $events->guardar($title, $description, $start_datetime, $end_datetime, $color, $dpto, $notifica_antes, $fecha_notifica, $idusuario, $fechas_guarda, $durante_tiempo, $otra_tiempo_notifica);
+            echo $response ? "Evento guardado exitosamente" : "No se pudo guardar";
+        } else {
+
+            $fecha_notifica = formulasNuevaFechaParaNotificar($start_datetime, $otra_tiempo_notifica, $notifica_antes, '-');
+
+            $response = $events->actualizar($id, $title, $description, $start_datetime, $end_datetime, $color, $dpto, $otra_tiempo_notifica, $notifica_antes, $fecha_notifica);
+            echo $response ? "Datos actualizados" : "No se pudo actualizar";
+        }
 
         break;
 
@@ -168,9 +142,8 @@ switch ($_GET["op"]) {
         break;
 
     case 'traeFechasNotificaciones':
-        $result = $events->traeProximasNotificaciones(date('Y-m-d H:i', strtotime($date)));
-
-        if (mysqli_num_rows($result) > 0)
+            $result = $events->traeProximasNotificaciones(date('Y-m-d H:i', strtotime($date)));
+        if (mysqli_num_rows($result) > 0){
             while ($reg = $result->fetch_assoc()) {
                 if (date('Y-m-d H:i', strtotime($reg['fecha_notifica'])) == date('Y-m-d H:i', strtotime($date))) {
                     $data['title'] = $reg['title'];
@@ -178,30 +151,20 @@ switch ($_GET["op"]) {
                     $data['icon'] = '../assets/img/notification.webp';
                     $data['url'] = 'https://localhost:5600';
                     $rows[] = $data;
-
-                    if ($reg['repite'] != 0) {
-                        $fecha1_siguiente = formulasNuevaFechaParaNotificar($reg['start_datetime'], $reg['repite'], $reg['formato_repite'], '+');
-                        $fecha2_siguiente = formulasNuevaFechaParaNotificar($reg['end_datetime'], $reg['repite'], $reg['formato_repite'], '+');
-                        $fecha_notificacion = formulasNuevaFechaParaNotificar($fecha1_siguiente, $reg['notifica'], $reg['formato_notifica'], '-');
-
-                        $ejecucion = $events->proximaRepeticionDeEvento($fecha1_siguiente, $fecha2_siguiente, $reg['id'], $reg['idbitacora_repetir'], $fecha_notificacion);
-                    } else {
-                        $ejecucion = $events->desactiva($reg['id'], $reg['idbitacora_repetir']);
-                    }
-
+    
                     $array['notif'] = $rows;
                     $array['count'] = 0;
                     $array['result'] = true;
-
-                    if ($ejecucion)
-                        echo json_encode($array);
-                } else
+                    echo json_encode($array);
+    
+                } else{
                     echo 300;
+                }
             }
-        else
+        }else{
             echo 300;
+        }
         break;
-
     case 'obtenerEvento':
         $response = $events->obtenerEvento($id);
         $sched_res = [];
@@ -244,4 +207,8 @@ switch ($_GET["op"]) {
 
         echo json_encode($results);
         break;
+        case 'finalizarEvento':
+            $response = $events->finalizarEvento($id);
+            echo $response ? "Evento finalizado correctamente" : "No se pudo finalizar";
+            break;
 }

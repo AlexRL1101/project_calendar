@@ -1,24 +1,31 @@
 version: '3.8'
+
 services:
-  php-apache-environment:
-    container_name: php-apache12
+  app:
     build:
-      context: ./
+      context: .
       dockerfile: Dockerfile
+    ports:
+      - "8080:80"
     depends_on:
       - db
+    environment:
+      DB_HOST: db
+      DB_NAME: vesselcalendario
+      DB_USER: vc_user
+      DB_PASS: ClaveSegura123
     volumes:
-      - ./:/var/www/html/
-    ports:
-      - 5900:80
+      - ./src:/var/www/html
+
   db:
-    container_name: db9
-    image: mysql
+    image: mysql:5.7
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: MYSQL_DATABASE
-      MYSQL_USER: MYSQL_USER
-      MYSQL_PASSWORD: MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: SuperSecretoRoot
+      MYSQL_DATABASE: vesselcalendario
+      MYSQL_USER: vc_user
+      MYSQL_PASSWORD: ClaveSegura123
     ports:
-      - "9200:3306"
+      - "3306:3306"
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d

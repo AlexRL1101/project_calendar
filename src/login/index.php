@@ -17,7 +17,6 @@ if (isset($_POST['login'])) {
         echo '<p class="error">Usuario y/o password son incorrectos!</p>';
     } else {
         if ($username != "" && $password != "") {
-            echo '<p class="success">Congratulations, you are logged in!</p>';
             $idusuario = $result['id'];
             $_SESSION['idusuario'] = $result['id'];
             $_SESSION['nombre'] = $result['nombres'];
@@ -27,6 +26,7 @@ if (isset($_POST['login'])) {
             $response = $query->fetch(PDO::FETCH_ASSOC);
             $_SESSION['idrol'] = $response['idrol'];
             header("Location: ../index.php");
+            exit();
         } else {
             echo '<p class="error">Usuario y/o password son incorrectos!</p>';
         }

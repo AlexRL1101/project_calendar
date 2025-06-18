@@ -143,7 +143,7 @@ switch ($_GET["op"]) {
 
     case 'traeFechasNotificaciones':
             $result = $events->traeProximasNotificaciones(date('Y-m-d H:i', strtotime($date)));
-        if (mysqli_num_rows($result) > 0){
+        if ($result && mysqli_num_rows($result) > 0){
             while ($reg = $result->fetch_assoc()) {
                 if (date('Y-m-d H:i', strtotime($reg['fecha_notifica'])) == date('Y-m-d H:i', strtotime($date))) {
                     $data['title'] = $reg['title'];

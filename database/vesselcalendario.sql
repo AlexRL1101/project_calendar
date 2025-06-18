@@ -1,6 +1,6 @@
--- MySQL dump 10.13  Distrib 8.0.26, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.30, for Win64 (x86_64)
 --
--- Host: bdyetox1804.mysql.database.azure.com    Database: vesselcalendario
+-- Host: bdyetox1804.mysql.database.azure.com    Database: fullcalendar
 -- ------------------------------------------------------
 -- Server version	5.6.47.0
 
@@ -26,16 +26,14 @@ CREATE TABLE `bitacora_repetir` (
   `idbitacora_repetir` int(11) NOT NULL AUTO_INCREMENT,
   `id_evento` int(11) NOT NULL,
   `repite` int(11) NOT NULL,
-  `formato_repite` varchar(45) DEFAULT NULL,
-  `notifica` int(11) DEFAULT NULL,
-  `formato_notifica` varchar(45) DEFAULT NULL,
-  `fecha_repitio` datetime DEFAULT NULL,
-  `fecha_notifica` datetime DEFAULT NULL,
-  `status` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idbitacora_repetir`),
-  KEY `fk_bitacorarepetir_eventos_idx` (`id_evento`),
-  CONSTRAINT `fk_bitacorarepetir_eventos` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`)
-) /*!50100 TABLESPACE `innodb_system` */ ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  `formato_repite` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
+  `notifica` int(11) NOT NULL,
+  `formato_notifica` varchar(35) COLLATE utf8mb4_general_ci NOT NULL,
+  `fecha_repitio` datetime NOT NULL,
+  `fecha_notifica` datetime NOT NULL,
+  `status` int(11) NOT NULL,
+  PRIMARY KEY (`idbitacora_repetir`)
+) /*!50100 TABLESPACE `innodb_system` */ ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +42,7 @@ CREATE TABLE `bitacora_repetir` (
 
 LOCK TABLES `bitacora_repetir` WRITE;
 /*!40000 ALTER TABLE `bitacora_repetir` DISABLE KEYS */;
-INSERT INTO `bitacora_repetir` VALUES (1,1,0,'Minutos',10,'Minutos','2023-02-17 15:57:00','2023-02-17 15:47:00',1),(2,2,0,'Minutos',5,'Minutos','2023-02-17 09:57:00','2023-02-17 09:52:00',1);
+INSERT INTO `bitacora_repetir` VALUES (1,1,3,'Minutos',5,'Minutos','2023-02-21 21:34:00','2023-02-21 21:29:00',1),(2,2,0,'Minutos',5,'Minutos','2023-02-21 21:39:00','2023-02-21 21:34:00',1),(3,3,0,'Minutos',5,'Minutos','2023-02-07 21:51:00','2023-02-07 21:46:00',1),(4,4,0,'Horas',5,'Minutos','2023-02-22 17:25:00','2023-02-22 17:20:00',1),(5,5,1,'Meses',5,'Minutos','2023-02-26 20:50:00','2023-02-26 20:45:00',1),(6,6,1,'Horas',1,'Minutos','2023-02-27 21:09:00','2023-02-27 21:08:00',2),(7,7,1,'Horas',1,'Minutos','2023-02-27 22:09:00','2023-02-27 22:08:00',1);
 /*!40000 ALTER TABLE `bitacora_repetir` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,15 +54,17 @@ DROP TABLE IF EXISTS `eventos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `eventos` (
-  `id` int(30) NOT NULL AUTO_INCREMENT,
-  `title` text NOT NULL,
-  `description` text NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` text COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci NOT NULL,
   `start_datetime` datetime NOT NULL,
-  `end_datetime` datetime DEFAULT NULL,
-  `status` int(11) DEFAULT '1',
-  `color` varchar(30) DEFAULT NULL,
+  `end_datetime` datetime NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `color` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
+  `idusuario` int(11) DEFAULT NULL,
+  `dpto` enum('CFM','CAM','CAS','CCB','CEO') COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) /*!50100 TABLESPACE `innodb_system` */ ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) /*!50100 TABLESPACE `innodb_system` */ ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,8 +73,85 @@ CREATE TABLE `eventos` (
 
 LOCK TABLES `eventos` WRITE;
 /*!40000 ALTER TABLE `eventos` DISABLE KEYS */;
-INSERT INTO `eventos` VALUES (1,'Evento 1','Testing','2023-02-17 15:57:00','2023-02-23 07:57:00',1,'#ab1717'),(2,'Evento 2','Esto es un test','2023-02-17 09:57:00','2023-02-15 07:58:00',1,'#4163b4');
+INSERT INTO `eventos` VALUES (1,'gegerg','reerfer','2023-02-21 21:34:00','2023-02-22 21:34:00',1,'#7b3d3d',4,''),(2,'Este es otro evento','Hola mundo','2023-02-21 21:39:00','2023-02-23 21:39:00',0,'#d95e5e',5,''),(3,'Hola mundo','dwedwqd','2023-02-07 21:51:00','2023-02-15 21:51:00',1,'#be2727',5,''),(4,'Gran dia','Último pago','2023-02-22 17:25:00','2023-02-22 17:30:00',1,'#2c9633',6,'CAS'),(5,'qwdqwdqw','ewdwed','2023-02-26 20:50:00','2023-02-27 21:35:00',1,'#000000',4,'CAM'),(6,'sfsf','sfsdfsdf','2023-02-27 21:09:00','2023-02-27 12:06:00',2,'#651a1a',5,'CAM'),(7,'sfsf','sfsdfsdf','2023-02-27 22:09:00','2023-02-27 13:06:00',1,'#651a1a',5,'CAM');
 /*!40000 ALTER TABLE `eventos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `rol`
+--
+
+DROP TABLE IF EXISTS `rol`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rol` (
+  `idrol` int(11) NOT NULL,
+  `nombre` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idrol`)
+) /*!50100 TABLESPACE `innodb_system` */ ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rol`
+--
+
+LOCK TABLES `rol` WRITE;
+/*!40000 ALTER TABLE `rol` DISABLE KEYS */;
+INSERT INTO `rol` VALUES (1,'admin'),(2,'superadmin');
+/*!40000 ALTER TABLE `rol` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_rol`
+--
+
+DROP TABLE IF EXISTS `user_rol`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_rol` (
+  `iduser_rol` int(11) NOT NULL,
+  `idusuario` varchar(45) DEFAULT NULL,
+  `idrol` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`iduser_rol`)
+) /*!50100 TABLESPACE `innodb_system` */ ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_rol`
+--
+
+LOCK TABLES `user_rol` WRITE;
+/*!40000 ALTER TABLE `user_rol` DISABLE KEYS */;
+INSERT INTO `user_rol` VALUES (1,'4','1'),(2,'5','2'),(3,'6','1'),(4,'7','1'),(5,'8','1');
+/*!40000 ALTER TABLE `user_rol` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `dpto` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
+  `nombres` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) /*!50100 TABLESPACE `innodb_system` */ ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (4,'vicky','cfm','CFM','Victoria Aguilera'),(5,'CAM','cam','CAM','Alejandro Serratos'),(6,'CAS','cas','CAS','Esteban Reyes'),(7,'CEO','ceo','CEO','Sergio Orozco'),(8,'MonEs','ccb','CCB','Monica Espinoza');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -86,4 +163,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-17  8:00:51
+-- Dump completed on 2023-02-27 21:35:52

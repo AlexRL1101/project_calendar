@@ -1,8 +1,19 @@
 <?php
- session_start();
- $idrol = $_SESSION['idrol'];
- $idusuario =  $_SESSION['idusuario'];
+session_start();
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+if (!isset($_SESSION['idrol']) || !isset($_SESSION['idusuario']) || !isset($_SESSION['nombre'])) {
+    header("Location: login/index.php"); // Cambia a la ruta de tu login
+    exit();
+}
+
+$idrol = $_SESSION['idrol'];
+$idusuario = $_SESSION['idusuario'];
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -19,7 +30,7 @@
     <script src="./js/jquery-3.6.0.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
     <script src="./fullcalendar/lib/main.min.js"></script>
-    <script src="js/bootbox.min.js"></script>
+    <script src="./js/bootbox.min.js"></script>
     <script src="./fullcalendar/lib/locales/es.js"></script>
 </head>
 
@@ -27,11 +38,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient" id="topNavBar">
         <div class="container">
         <a class="navbar-link" style="color: #FCF3CF;" href="./login/logout.php">Cerrar Sesión</a>
-            <a class="navbar-brand" href="index.php">Calendario</a>
+            <a class="navbar-brand" href="./index.php">Calendario</a>
             <a class="navbar-brand" href="./events/index.php">Eventos </a>
         <?php 
             if($_SESSION['idrol']== 2){
-            echo '<a class="navbar-brand" href="users/index.php">Usuarios</a>';
+            echo '<a class="navbar-brand" href="./users/index.php">Usuarios</a>';
         }
         ?>
             <div>

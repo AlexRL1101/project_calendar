@@ -63,6 +63,9 @@ CREATE TABLE `eventos` (
   `color` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
   `idusuario` int(11) DEFAULT NULL,
   `dpto` enum('CFM','CAM','CAS','CCB','CEO') COLLATE utf8mb4_general_ci NOT NULL,
+  `fecha_notifica` varchar(45) COLLATE utf8mb4_general_ci,
+  `tiempo_notifica` int(11),
+  `formato_notifica` varchar(45) COLLATE utf8mb4_general_ci,
   PRIMARY KEY (`id`)
 ) /*!50100 TABLESPACE `innodb_system` */ ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

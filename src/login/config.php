@@ -1,8 +1,8 @@
 <?php
-$host = getenv('DB_HOST') ?: 'sql5.freesqldatabase.com';
-$user = getenv('MYSQL_USER')?: 'sql5785606';
-$pass = getenv('MYSQL_PASSWORD')?: 'Y68vPLzeQz';
-$db   = getenv('MYSQL_DATABASE')?: 'sql5785606';
+$host = getenv('DB_HOST');
+$user = getenv('DB_USER');
+$pass = getenv('DB_PASS');
+$db   = getenv('DB_NAME');
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db","$user","$pass");

@@ -39,32 +39,35 @@ if (isset($_POST['login'])) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
-    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" 
-    integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="estilo-login.css">
     <title>login</title>
 </head>
+
 <body>
     <form method="post" action="" name="signin-form">
         <h5></h5><br><br><br>
-            <div class="fa-solid fa-user">
-                <label>Usuario</label>
-                <input type="text" name="username" pattern="[a-zA-Z0-9]+" required placeholder="ves123"/>
-            </div>
-            <div class="fa-solid fa-unlock">
-                <label>Contraseña</label>
-                <input type="password" name="password" required placeholder="*******"/>
-            </div><br>
-            <br><button type="submit" name="login" value="login">Iniciar sesion</button>
+        <div class="fa-solid fa-user">
+            <label>Usuario</label>
+            <p><code>admin</code></p>
+            <input type="text" name="username" pattern="[a-zA-Z0-9]+" required placeholder="ves123" />
+        </div>
+        <div class="fa-solid fa-unlock">
+            <label>Contraseña</label>
+            <p><code>admin</code></p>
+            <input type="password" name="password" required placeholder="*******" />
+        </div><br>
+        <br><button type="submit" name="login" value="login">Iniciar sesion</button>
     </form>
 </body>
+
 </html>
-
-
-    

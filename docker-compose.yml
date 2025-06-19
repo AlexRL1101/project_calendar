@@ -7,25 +7,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:80"
-    depends_on:
-      - db
     environment:
-      DB_HOST: db
-      DB_NAME: vesselcalendario
-      DB_USER: vc_user
-      DB_PASS: ClaveSegura123
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
     volumes:
       - ./src:/var/www/html
-
-  db:
-    image: mysql:5.7
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: SuperSecretoRoot
-      MYSQL_DATABASE: vesselcalendario
-      MYSQL_USER: vc_user
-      MYSQL_PASSWORD: ClaveSegura123
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./database:/docker-entrypoint-initdb.d

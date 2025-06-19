@@ -22,7 +22,7 @@ $idusuario = $_SESSION['idusuario'];
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendario Web</title>
-    <link rel="stylesheet" href="./css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="./css/all.css" />
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./fullcalendar/lib/main.min.css">
     <link rel="stylesheet" href="./css/style.css">
@@ -37,10 +37,10 @@ $idusuario = $_SESSION['idusuario'];
 <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-gradient" id="topNavBar">
         <div class="container">
-        <a class="navbar-link" style="color: #FCF3CF;" href="./login/logout.php">Cerrar Sesión</a>
+            <a class="navbar-link" style="color: #FCF3CF;" href="./login/logout.php">Cerrar Sesión</a>
             <a class="navbar-brand" href="./index.php">Calendario</a>
             <a class="navbar-brand" href="./events/index.php">Eventos </a>
-        <?php 
+            <?php 
             if($_SESSION['idrol']== 2){
             echo '<a class="navbar-brand" href="./users/index.php">Usuarios</a>';
         }
@@ -67,42 +67,49 @@ $idusuario = $_SESSION['idusuario'];
                                 <input type="hidden" name="id" value="">
                                 <div class="form-group mb-2">
                                     <label for="title" class="control-label">Titulo</label>
-                                    <input type="text" class="form-control form-control-sm rounded-0" name="title" id="title" required>
+                                    <input type="text" class="form-control form-control-sm rounded-0" name="title"
+                                        id="title" required>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="description" class="control-label">Descripción</label>
-                                    <textarea rows="3" class="form-control form-control-sm rounded-0" name="description" id="description" required></textarea>
+                                    <textarea rows="3" class="form-control form-control-sm rounded-0" name="description"
+                                        id="description" required></textarea>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="color" class="control-label">Color</label>
                                     <select name="color" class="form-control" id="color">
-									  <option value="">Seleccionar</option>
-						                <option style="color:#0071c5;" value="#0071c5">&#9724; Azul oscuro</option>
+                                        <option value="">Seleccionar</option>
+                                        <option style="color:#0071c5;" value="#0071c5">&#9724; Azul oscuro</option>
                                         <option style="color:#40E0D0;" value="#40E0D0">&#9724; Turquesa</option>
-                                        <option style="color:#008000;" value="#008000">&#9724; Verde</option>						  
+                                        <option style="color:#008000;" value="#008000">&#9724; Verde</option>
                                         <option style="color:#FFD700;" value="#FFD700">&#9724; Amarillo</option>
                                         <option style="color:#FF8C00;" value="#FF8C00">&#9724; Naranja</option>
                                         <option style="color:#FF0000;" value="#FF0000">&#9724; Rojo</option>
                                         <option style="color:#000;" value="#000">&#9724; Negro</option>
-						  
-						</select>
+
+                                    </select>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="start_datetime" class="control-label">Inicio</label>
-                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="start_datetime" id="start_datetime" required>
+                                    <input type="datetime-local" class="form-control form-control-sm rounded-0"
+                                        name="start_datetime" id="start_datetime" required>
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Fin</label>
-                                    <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" required>
+                                    <input type="datetime-local" class="form-control form-control-sm rounded-0"
+                                        name="end_datetime" id="end_datetime" required>
                                 </div>
                                 <input type="hidden" id="idbitacora_repetir" name="idbitacora_repetir" />
 
                                 <div id="div-repetir" class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Repetir cada</label>
-                                    <input type="number" for="variacion-repite" class="form-control form-control-sm rounded-0" min="0" value="3" id="numero_repite" name="numero_repite" required />
+                                    <input type="number" for="variacion-repite"
+                                        class="form-control form-control-sm rounded-0" min="0" value="3"
+                                        id="numero_repite" name="numero_repite" required />
                                 </div>
                                 <div id="select-repetir" class="form-group mb-2">
-                                    <select for="select-repite" class="form-control form-control-sm rounded-0" id="opciones_repetir" name="opciones_repetir" required>
+                                    <select for="select-repite" class="form-control form-control-sm rounded-0"
+                                        id="opciones_repetir" name="opciones_repetir" required>
                                         <option value="Minutos">Minutos</option>
                                         <option value="Horas">Horas</option>
                                         <option value="Dias">Dias</option>
@@ -113,15 +120,20 @@ $idusuario = $_SESSION['idusuario'];
 
                                 <div id="durante" class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Durante (meses)</label>
-                                    <input type="number" for="variacion-repite" class="form-control form-control-sm rounded-0" min="0" placeholder="Cantidad de meses" id="durante_tiempo" name="durante_tiempo" />
+                                    <input type="number" for="variacion-repite"
+                                        class="form-control form-control-sm rounded-0" min="0"
+                                        placeholder="Cantidad de meses" id="durante_tiempo" name="durante_tiempo" />
                                 </div>
 
                                 <div class="form-group mb-2">
                                     <label for="end_datetime" class="control-label">Notifica faltando</label>
-                                    <input type="number" for="variacion-repite" class="form-control form-control-sm rounded-0" min="0" value="5" id="otra_tiempo_notifica" name="otra_tiempo_notifica" required />
+                                    <input type="number" for="variacion-repite"
+                                        class="form-control form-control-sm rounded-0" min="0" value="5"
+                                        id="otra_tiempo_notifica" name="otra_tiempo_notifica" required />
                                 </div>
                                 <div class="form-group mb-2">
-                                    <select for="select-repite" class="form-control form-control-sm rounded-0" id="notifica_antes" name="notifica_antes" required>
+                                    <select for="select-repite" class="form-control form-control-sm rounded-0"
+                                        id="notifica_antes" name="notifica_antes" required>
                                         <option value="Minutos">Minutos</option>
                                         <option value="Horas">Horas</option>
                                         <option value="Dias">Dias</option>
@@ -131,15 +143,18 @@ $idusuario = $_SESSION['idusuario'];
                                 </div>
                                 <div class="form-group mb-2">
                                     <label for="dpto" class="control-label">Departamento</label>
-                                    <input type="text" class="form-control form-control-sm rounded-0" name="dpto" id="dpto" required>
+                                    <input type="text" class="form-control form-control-sm rounded-0" name="dpto"
+                                        id="dpto" required>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div class="card-footer">
                         <div class="text-center">
-                            <button class="btn btn-primary btn-sm rounded-0" type="submit" form="schedule-form"><i class="fa fa-save"></i> Guardar</button>
-                            <button class="btn btn-default border btn-sm rounded-0" type="reset" form="schedule-form"><i class="fa fa-reset"></i> Cancelar</button>
+                            <button class="btn btn-primary btn-sm rounded-0" type="submit" form="schedule-form"><i
+                                    class="fa fa-save"></i> Guardar</button>
+                            <button class="btn btn-default border btn-sm rounded-0" type="reset" form="schedule-form"><i
+                                    class="fa fa-reset"></i> Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -174,10 +189,14 @@ $idusuario = $_SESSION['idusuario'];
                 </div>
                 <div class="modal-footer rounded-0">
                     <div class="text-end">
-                        <button type="button" class="btn btn-success btn-sm rounded-0" id="hecho" data-id="">Hecho</button>
-                        <button type="button" class="btn btn-warning btn-sm rounded-0" id="edit" data-id="">Editar</button>
-                        <button type="button" class="btn btn-danger btn-sm rounded-0" id="delete" data-id="">Eliminar</button>
-                        <button type="button" class="btn btn-info btn-sm rounded-0" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-success btn-sm rounded-0" id="hecho"
+                            data-id="">Hecho</button>
+                        <button type="button" class="btn btn-warning btn-sm rounded-0" id="edit"
+                            data-id="">Editar</button>
+                        <button type="button" class="btn btn-danger btn-sm rounded-0" id="delete"
+                            data-id="">Eliminar</button>
+                        <button type="button" class="btn btn-info btn-sm rounded-0"
+                            data-bs-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>

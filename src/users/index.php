@@ -43,7 +43,7 @@ table.dataTable thead {
 		<a class="navbar-link" style="color: #FCF3CF;" href="../login/logout.php">cerrar sesion</a>
             <a class="navbar-brand" href="../index.php">Calendario</a>
             <a class="navbar-brand" href="../events/index.php">Eventos</a>
-            <a class="navbar-brand" href="index.php">Usuarios</a>
+            <a class="navbar-brand" href="./index.php">Usuarios</a>
 
             <div>
                 <b class="text-light">Usuarios</b>

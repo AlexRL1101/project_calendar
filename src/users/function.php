@@ -1,6 +1,11 @@
 <?php
 function db_query($query) {
-    $connection = mysqli_connect("localhost","root","","vesselcal");
+	$host = getenv('DB_HOST') ?: 'sql5.freesqldatabase.com';
+	$user = getenv('MYSQL_USER')?: 'sql5785606';
+	$pass = getenv('MYSQL_PASSWORD')?: 'Y68vPLzeQz';
+	$db   = getenv('MYSQL_DATABASE')?: 'sql5785606';
+
+    $connection = mysqli_connect($host,$user,$pass,$db);
     $result = mysqli_query($connection,$query);
 
     return $result;

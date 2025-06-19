@@ -42,7 +42,7 @@ CREATE TABLE `bitacora_repetir` (
 
 LOCK TABLES `bitacora_repetir` WRITE;
 /*!40000 ALTER TABLE `bitacora_repetir` DISABLE KEYS */;
-INSERT INTO `bitacora_repetir` VALUES (1,1,3,'Minutos',5,'Minutos','2023-02-21 21:34:00','2023-02-21 21:29:00',1),(2,2,0,'Minutos',5,'Minutos','2023-02-21 21:39:00','2023-02-21 21:34:00',1),(3,3,0,'Minutos',5,'Minutos','2023-02-07 21:51:00','2023-02-07 21:46:00',1),(4,4,0,'Horas',5,'Minutos','2023-02-22 17:25:00','2023-02-22 17:20:00',1),(5,5,1,'Meses',5,'Minutos','2023-02-26 20:50:00','2023-02-26 20:45:00',1),(6,6,1,'Horas',1,'Minutos','2023-02-27 21:09:00','2023-02-27 21:08:00',2),(7,7,1,'Horas',1,'Minutos','2023-02-27 22:09:00','2023-02-27 22:08:00',1);
+INSERT INTO `bitacora_repetir` VALUES (1,1,3,'Minutos',5,'Minutos','2025-06-21 21:34:00','2025-06-21 21:29:00',1);
 /*!40000 ALTER TABLE `bitacora_repetir` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -73,7 +73,7 @@ CREATE TABLE `eventos` (
 
 LOCK TABLES `eventos` WRITE;
 /*!40000 ALTER TABLE `eventos` DISABLE KEYS */;
-INSERT INTO `eventos` VALUES (1,'gegerg','reerfer','2023-02-21 21:34:00','2023-02-22 21:34:00',1,'#7b3d3d',4,''),(2,'Este es otro evento','Hola mundo','2023-02-21 21:39:00','2023-02-23 21:39:00',0,'#d95e5e',5,''),(3,'Hola mundo','dwedwqd','2023-02-07 21:51:00','2023-02-15 21:51:00',1,'#be2727',5,''),(4,'Gran dia','Último pago','2023-02-22 17:25:00','2023-02-22 17:30:00',1,'#2c9633',6,'CAS'),(5,'qwdqwdqw','ewdwed','2023-02-26 20:50:00','2023-02-27 21:35:00',1,'#000000',4,'CAM'),(6,'sfsf','sfsdfsdf','2023-02-27 21:09:00','2023-02-27 12:06:00',2,'#651a1a',5,'CAM'),(7,'sfsf','sfsdfsdf','2023-02-27 22:09:00','2023-02-27 13:06:00',1,'#651a1a',5,'CAM');
+INSERT INTO `eventos` VALUES (1,'Gran dia','Último pago','2025-06-22 17:25:00','2025-06-22 17:30:00',1,'#2c9633',6,'CAS');
 /*!40000 ALTER TABLE `eventos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,7 +122,7 @@ CREATE TABLE `user_rol` (
 
 LOCK TABLES `user_rol` WRITE;
 /*!40000 ALTER TABLE `user_rol` DISABLE KEYS */;
-INSERT INTO `user_rol` VALUES (1,'4','1'),(2,'5','2'),(3,'6','1'),(4,'7','1'),(5,'8','1');
+INSERT INTO `user_rol` VALUES (1,'1','1'),(2,'2','2');
 /*!40000 ALTER TABLE `user_rol` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,7 +150,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (4,'vicky','cfm','CFM','Victoria Aguilera'),(5,'CAM','cam','CAM','Alejandro Serratos'),(6,'CAS','cas','CAS','Esteban Reyes'),(7,'CEO','ceo','CEO','Sergio Orozco'),(8,'MonEs','ccb','CCB','Monica Espinoza');
+INSERT INTO `users` VALUES (1,'vicky','cfm','CFM','Victoria X'),(2, 'admin', 'admin', 'admin', 'Admin X');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -163,4 +163,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-27 21:35:52
+-- Dump completed on 2025-06-27 21:35:52

@@ -1,8 +1,8 @@
 <?php
-$host = getenv('DB_HOST') ?: 'db';          // en Docker Compose el servicio se llama "db"
-$user = getenv('MYSQL_USER');
-$pass = getenv('MYSQL_PASSWORD');
-$db   = getenv('MYSQL_DATABASE');
+$host = getenv('DB_HOST') ?: 'sql5.freesqldatabase.com';
+$user = getenv('MYSQL_USER')?: 'sql5785606';
+$pass = getenv('MYSQL_PASSWORD')?: 'Y68vPLzeQz';
+$db   = getenv('MYSQL_DATABASE')?: 'sql5785606';
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db","$user","$pass");

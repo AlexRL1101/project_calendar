@@ -2,23 +2,23 @@ function init() {
     getEvents();
     getNotification();
 
-    $("#schedule-form").on("submit", function(e) {
+    $("#schedule-form").on("submit", function (e) {
         saveEvents(e);
     });
 
-    setInterval(function() { getNotification(); }, 10000);
+    setInterval(function () { getNotification(); }, 10000);
 
-    $('#edit').click(function() {
+    $('#edit').click(function () {
         let id = $(this).attr('data-id');
         editEvents(id);
     });
 
-    $('#delete').click(function() {
+    $('#delete').click(function () {
         let id = $(this).attr('data-id');
         deleteEvents(id);
     });
 
-    $('#hecho').click(function() {
+    $('#hecho').click(function () {
         let id = $(this).attr('data-id');
         finishEvent(id);
     });
@@ -31,8 +31,9 @@ function getEvents() {
 
     $.ajax({
         url: "ajax/events.php?op=obtenerEventos",
-        type: "JSON",
-        success: function(scheds) {
+        // type: "JSON",
+        type: "GET",
+        success: function (scheds) {
             var scheds = $.parseJSON(scheds);
 
             if (!!scheds) {
@@ -58,7 +59,7 @@ function getEvents() {
                 themeSystem: 'bootstrap',
                 //Random default events
                 events: events,
-                eventClick: function(info) {
+                eventClick: function (info) {
                     var _details = $('#event-details-modal')
                     var id = info.event.id
                     if (!!scheds[id]) {
@@ -87,7 +88,7 @@ function getEvents() {
                         alert("Event is undefined");
                     }
                 },
-                eventDidMount: function(info) {
+                eventDidMount: function (info) {
                     // Do Something after events mounted
                 },
                 editable: true
@@ -96,7 +97,7 @@ function getEvents() {
             calendar.render();
 
             // Form reset listener
-            $('#schedule-form').on('reset', function() {
+            $('#schedule-form').on('reset', function () {
                 $(this).find('input:hidden').val('')
                 $(this).find('input:visible').first().focus()
             })
@@ -115,11 +116,11 @@ function saveEvents(e) {
         data: formData,
         contentType: false,
         processData: false,
-        success: function(datos) {
+        success: function (datos) {
             bootbox.alert({
                 title: "Mensaje",
                 message: datos,
-                callback: function() {
+                callback: function () {
                     var _details = $('#event-details-modal')
                     _details.modal('hide');
                     $('#schedule-form').trigger("reset");
@@ -143,7 +144,7 @@ function getNotification() {
         $.ajax({
             url: "./ajax/events.php?op=traeFechasNotificaciones",
             type: "POST",
-            success: function(res, textStatus, jqXHR) {
+            success: function (res, textStatus, jqXHR) {
                 if (res != 300) {
                     let respuesta = jQuery.parseJSON(res);
 
@@ -159,7 +160,7 @@ function getNotification() {
                                     body: notificationDetails[i]['message'],
                                 });
 
-                            notificationObj.onclick = function() {
+                            notificationObj.onclick = function () {
                                 window.open(notificationUrl);
                                 notificationObj.close();
                             };
@@ -167,7 +168,7 @@ function getNotification() {
                     }
                 }
             },
-            error: function(jqXHR, textStatus, errorThrown) {}
+            error: function (jqXHR, textStatus, errorThrown) { }
         });
     }
 };
@@ -178,7 +179,7 @@ function editEvents(id) {
         url: "ajax/events.php?op=obtenerEvento",
         type: "POST",
         data: { id: id },
-        success: function(datos) {
+        success: function (datos) {
             var datos = $.parseJSON(datos);
 
             $("#select-repetir").hide();
@@ -209,7 +210,7 @@ function editEvents(id) {
 
 
 function deleteEvents(id) {
-    bootbox.confirm('Desea realmente eliminar este evento?', function(result) {
+    bootbox.confirm('Desea realmente eliminar este evento?', function (result) {
         if (result === true) {
             $('#event-details-modal').modal('hide')
 
@@ -217,11 +218,11 @@ function deleteEvents(id) {
                 url: "ajax/events.php?op=eliminarEvento",
                 type: "POST",
                 data: { id: id },
-                success: function(datos) {
+                success: function (datos) {
                     bootbox.alert({
                         title: "Mensaje",
                         message: datos,
-                        callback: function() {
+                        callback: function () {
                             getEvents();
                         }
                     });
@@ -238,11 +239,11 @@ function finishEvent(id) {
         url: "ajax/events.php?op=finalizarEvento",
         type: "POST",
         data: { id: id },
-        success: function(datos) {
+        success: function (datos) {
             bootbox.alert({
                 title: "Mensaje",
                 message: datos,
-                callback: function() {
+                callback: function () {
                     getEvents();
                 }
             });

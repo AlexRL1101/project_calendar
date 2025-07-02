@@ -76,7 +76,7 @@ CREATE TABLE `eventos` (
 
 LOCK TABLES `eventos` WRITE;
 /*!40000 ALTER TABLE `eventos` DISABLE KEYS */;
-INSERT INTO `eventos` VALUES (1,'Gran dia','Último pago','2025-06-22 17:25:00','2025-06-22 17:30:00',1,'#2c9633',6,'CAS');
+INSERT INTO `eventos` VALUES (1,'Gran dia','Último pago','2025-06-22 17:25:00','2025-06-22 17:30:00',1,'#2c9633',1,'CAS',null,null,null);
 /*!40000 ALTER TABLE `eventos` ENABLE KEYS */;
 UNLOCK TABLES;
 

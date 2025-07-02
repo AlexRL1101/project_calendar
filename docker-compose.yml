@@ -12,5 +12,6 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
+      DB_PORT: ${DB_PORT}
     volumes:
       - ./src:/var/www/html

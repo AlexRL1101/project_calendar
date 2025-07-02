@@ -4,8 +4,9 @@ function db_query($query) {
 	$user = getenv('DB_USER');
 	$pass = getenv('DB_PASS');
 	$db   = getenv('DB_NAME');
+	$port   = getenv('DB_PORT');
 
-    $connection = mysqli_connect($host,$user,$pass,$db);
+    $connection = mysqli_connect($host,$user,$pass,$db,$port);
     $result = mysqli_query($connection,$query);
 
     return $result;

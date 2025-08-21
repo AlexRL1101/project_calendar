@@ -16,8 +16,6 @@ try {
     ];
 
     $conn = new PDO($dsn, $user, $pass, $options);
-
-    echo "✅ Conexión exitosa con SSL";
 } catch(PDOException $e) {
     print_r($e);
     die('❌ No se puede conectar a la base de datos');

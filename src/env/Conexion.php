@@ -1,80 +1,80 @@
 <?php
-
 $host = getenv('DB_HOST');
 $user = getenv('DB_USER');
 $pass = getenv('DB_PASS');
 $db   = getenv('DB_NAME');
-$port   = getenv('DB_PORT');
+$port = getenv('DB_PORT');
 
-$conexion = new mysqli($host, $user, $pass, $db, $port);
+// Ruta al certificado CA
+$ssl_ca = __DIR__ . "../assets/cert/cacert.pem";
 
-mysqli_query($conexion, 'SET NAMES "utf8"');
+// Crear conexión MySQLi
+$conexion = mysqli_init();
 
-//Si tenemos un posible error en la conexión lo mostramos
-if (mysqli_connect_errno()) {
-	printf("Falló conexión a la base de datos: %s\n", mysqli_connect_error());
-	exit();
+// Configurar SSL (solo CA, no necesitas client-cert ni client-key para PlanetScale)
+mysqli_ssl_set($conexion, NULL, NULL, $ssl_ca, NULL, NULL);
+
+// Conectar con SSL
+if (!mysqli_real_connect($conexion, $host, $user, $pass, $db, $port, NULL, MYSQLI_CLIENT_SSL)) {
+    printf("❌ Falló conexión a la base de datos: %s\n", mysqli_connect_error());
+    exit();
 }
 
+// Configurar charset
+mysqli_set_charset($conexion, "utf8");
+
+// ----------------------
+// FUNCIONES AUXILIARES
+// ----------------------
 if (!function_exists('ejecutarConsulta')) {
-	function ejecutarConsulta($sql)
-	{
-		global $conexion;
-		$query = $conexion->query($sql);
-		return $query;
-	}
+    function ejecutarConsulta($sql)
+    {
+        global $conexion;
+        return $conexion->query($sql);
+    }
 
-	function ejecutarConsultaLimit($sql)
-	{
-		global $conexion;
+    function ejecutarConsultaLimit($sql)
+    {
+        global $conexion;
+        $conexion->query("SET SESSION group_concat_max_len = 1000000");
+        return $conexion->query($sql);
+    }
 
-		// Aumentar el límite para la sesión actual (si no lo has hecho ya)
-		$conexion->query("SET SESSION group_concat_max_len = 1000000");
+    function ejecutarConsultaSimpleFila($sql)
+    {
+        global $conexion;
+        $query = $conexion->query($sql);
+        return $query ? $query->fetch_assoc() : null;
+    }
 
-		$query = $conexion->query($sql);
-		return $query;
-	}
+    function ejecutarConsulta_retornarID($sql)
+    {
+        global $conexion;
+        $conexion->query($sql);
+        return $conexion->insert_id;
+    }
 
+    function limpiarCadena($str)
+    {
+        global $conexion;
+        $str = mysqli_real_escape_string($conexion, trim($str));
+        return htmlspecialchars($str);
+    }
 
-	function ejecutarConsultaSimpleFila($sql)
-	{
-		global $conexion;
-		$query = $conexion->query($sql);
-		$row = $query->fetch_assoc();
-		return $row;
-	}
+    function ejecutarConsultaComoJSON($sql)
+    {
+        global $conexion;
+        $query = $conexion->query($sql);
 
-	function ejecutarConsulta_retornarID($sql)
-	{
-		global $conexion;
-		$query = $conexion->query($sql);
-		return $conexion->insert_id;
-	}
-
-	function limpiarCadena($str)
-	{
-		global $conexion;
-		$str = mysqli_real_escape_string($conexion, trim($str));
-		return htmlspecialchars($str);
-	}
-
-	function ejecutarConsultaComoJSON($sql)
-	{
-		global $conexion;
-		$query = $conexion->query($sql);
-
-		// Comprueba si la consulta fue exitosa
-		if ($query) {
-			$resultados = array();
-			while ($fila = $query->fetch_assoc()) {
-				$resultados[] = $fila;
-			}
-			// Convierte el array de resultados en formato JSON
-			$jsonResultados = json_encode($resultados);
-			return $jsonResultados;
-		} else {
-			// Manejar el caso en que la consulta falla
-			return false;
-		}
-	}
+        if ($query) {
+            $resultados = [];
+            while ($fila = $query->fetch_assoc()) {
+                $resultados[] = $fila;
+            }
+            return json_encode($resultados);
+        } else {
+            return false;
+        }
+    }
 }
+?>

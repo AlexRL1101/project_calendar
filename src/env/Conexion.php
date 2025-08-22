@@ -5,8 +5,7 @@ $pass = getenv('DB_PASS');
 $db   = getenv('DB_NAME');
 $port = getenv('DB_PORT');
 
-// Ruta al certificado CA
-$ssl_ca = __DIR__ . "../assets/cert/cacert.pem";
+$ssl_ca = realpath(__DIR__ . "/../assets/cert/cacert.pem");
 
 // Crear conexión MySQLi
 $conexion = mysqli_init();
@@ -16,7 +15,7 @@ mysqli_ssl_set($conexion, NULL, NULL, $ssl_ca, NULL, NULL);
 
 // Conectar con SSL
 if (!mysqli_real_connect($conexion, $host, $user, $pass, $db, $port, NULL, MYSQLI_CLIENT_SSL)) {
-    printf("❌ Falló conexión a la base de datos: %s\n", mysqli_connect_error());
+    printf("❌ Falló conexión a la base de datos: %s\n");
     exit();
 }
 

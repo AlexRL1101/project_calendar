@@ -41,9 +41,9 @@ $idusuario = $_SESSION['idusuario'];
             <a class="navbar-brand" href="./index.php">Calendario</a>
             <a class="navbar-brand" href="./events/index.php">Eventos </a>
             <?php 
-            if($_SESSION['idrol']== 2){
-            echo '<a class="navbar-brand" href="./users/index.php">Usuarios</a>';
-        }
+        //     if($_SESSION['idrol']== 2){
+        //     echo '<a class="navbar-brand" href="./users/index.php">Usuarios</a>';
+        // }
         ?>
             <div>
                 <b class="text-light">Calendario</b>

@@ -17,6 +17,5 @@ try {
 
     $conn = new PDO($dsn, $user, $pass, $options);
 } catch(PDOException $e) {
-    print_r($e);
     die('❌ No se puede conectar a la base de datos');
 }

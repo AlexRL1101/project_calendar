@@ -7,7 +7,7 @@ function db_query($query) {
     $port = getenv('DB_PORT');
 
     // Ruta al certificado
-    $ssl_ca = realpath(__DIR__ . "/../assets/cert/cacert.pem");
+    $ssl_ca = realpath(__DIR__ . "/../assets/cert/ca.pem");
 
     $connection = mysqli_init();
 

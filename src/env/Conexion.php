@@ -5,7 +5,7 @@ $pass = getenv('DB_PASS');
 $db   = getenv('DB_NAME');
 $port = getenv('DB_PORT');
 
-$ssl_ca = realpath(__DIR__ . "/../assets/cert/cacert.pem");
+$ssl_ca = realpath(__DIR__ . "/../assets/cert/ca.pem");
 
 // Crear conexión MySQLi
 $conexion = mysqli_init();

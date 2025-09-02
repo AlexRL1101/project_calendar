@@ -12,7 +12,7 @@ try {
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         // Fuerza conexión SSL
         PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
-        PDO::MYSQL_ATTR_SSL_CA => __DIR__ . "../assets/cert/cacert.pem" // ruta al certificado CA
+        PDO::MYSQL_ATTR_SSL_CA => __DIR__ . "../assets/cert/ca.pem" // ruta al certificado CA
     ];
 
     $conn = new PDO($dsn, $user, $pass, $options);
